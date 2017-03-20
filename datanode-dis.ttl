@@ -1,0 +1,2 @@
+<http://purl.org/datanode/ns/duplicate> <http://www.w3.org/2002/07/owl#disjointPropertyWith> <http://purl.org/datanode/ns/disjointCapabilityWith> .
+<http://purl.org/datanode/ns/inconsistentWith> <http://www.w3.org/2002/07/owl#disjointPropertyWith> <http://purl.org/datanode/ns/consistentWith> .

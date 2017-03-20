@@ -1,0 +1,81 @@
+<p>Below are a set of policy statements that are potentially applicable to the output of the process, because they could propagate from (one of) the input.</p>
+<p>Please indicate whether they should be applied to the output:</p>
+<ul>
+	<li title="Certainly not"><i class="sdisagree glyphicon glyphicon-flag"></i> Certainly not</li>
+	<li title="Probably not"><i class="disagree glyphicon glyphicon-flag"></i> Probably not</li>
+	<li title="I don't Know"><i class="dontknow glyphicon glyphicon-flag"></i> I don't know</li>
+	<li title="Probably yes"><i class="agree glyphicon glyphicon-flag"></i> Probably yes</li>
+	<li title="Certainly yes"><i class="sagree glyphicon glyphicon-flag"></i> Certainly yes</li>
+</ul>
+<form method="POST" id="submit_phase4" >
+<input type="hidden" name="id" value="<?php $this->spit('id'); ?>"/>
+<input type="hidden" name="phase" value="4"/>
+<input type="hidden" name="action" value="submitchoices"/>
+<input type="hidden" name="controller" value="task"/>
+<!--  pre><?php print_r($this->getAll());?></pre -->
+<table class="data table-bordered table-condensed">
+<thead>
+<tr>
+	<th>From</th>
+	<th colspan=2>Policy</th>
+	<th>Output</th>
+	<th title="Certainly not"><i class="sdisagree glyphicon glyphicon-flag"></i></th>
+	<th title="Probably not"><i class="disagree glyphicon glyphicon-flag"></i></th>
+	<th title="I don't Know"><i class="dontknow glyphicon glyphicon-flag"></i></th>
+	<th title="Probably yes"><i class="agree glyphicon glyphicon-flag"></i></th>
+	<th title="Certainly yes"><i class="sagree glyphicon glyphicon-flag"></i></th>
+</tr>
+</thead>
+<tbody>
+<?php $choiceData = $this->get('choice', array()); ?>
+<?php foreach($this->get('policies') as $output => $choice):?>
+<?php foreach($choice as $deontic => $actions):?>
+<?php foreach($actions as $action => $datasets): ?>
+<tr>
+	<td><?php print join(',<br/>',$datasets);?>
+	</td>
+	
+	<td><?php print $deontic;?></td>
+	<td><a href="<?php print $action;?>"><?php print $this->localName($action);?></a></td>
+	<td><?php print substr(@$output,strpos(@$output,'#') + 1); ?></td>
+	<?php foreach(array('sdisagree' => -2,'disagree'=>-1,'dontknow'=>0,'agree'=>1,'sagree'=>2) as $class => $value): ?>
+	<?php $checked = FALSE;?>
+	<?php 
+	if(isset($choiceData[$output][$deontic][$action]) && $choiceData[$output][$deontic][$action] == $value): 
+		$checked = TRUE;
+	endif; 
+	?>
+	<td onClick="tdClick(this,event)" class="<?php print $class;?> <?php if($checked):?>selected<?php endif;?> choice">
+		<input class="choicer" onClick="event.stopPropagation();"
+		<?php if($checked):?>checked="checked"<?php endif; ?>
+		onChange="changeChoice(this)" 
+		type="radio" 
+		name="choice[<?php print $output; ?>][<?php print $deontic; ?>][<?php print $action?>]" 
+		value="<?php print $value; ?>"/>
+	</td>
+	<?php endforeach; ?>
+</tr>
+<?php endforeach; ?>
+<?php endforeach; ?>
+<?php endforeach; ?>
+</tbody>
+</table>
+</form>
+<script>
+function tdClick(el,e){
+	$(el).children().first().prop('checked', 'checked');
+	changeChoice($(el).children().first());
+}
+function changeChoice(el){
+	var td = $(el).parent();
+	var v = $(el).val() - 0;
+	var n = $(el).attr('name');
+	$('input[name="'+n+'"]').parent().removeClass("selected");
+	$(el).parent().addClass("selected");
+}
+$(document).ready(function(){
+	$.each($('td.colored'),function(index,el){
+		changeChoice($(el).children().first());
+	});
+});
+</script>

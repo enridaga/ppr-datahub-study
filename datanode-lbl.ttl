@@ -1,0 +1,119 @@
+<http://purl.org/datanode/ns/optimizedFrom> <http://www.w3.org/2000/01/rdf-schema#label> "optimized from"@end .
+<http://purl.org/datanode/ns/disjointPortionWith> <http://www.w3.org/2000/01/rdf-schema#label> "disjoint portion with"@en .
+<http://purl.org/datanode/ns/links> <http://www.w3.org/2000/01/rdf-schema#label> "links"@en .
+<http://purl.org/datanode/ns/hasChange> <http://www.w3.org/2000/01/rdf-schema#label> "has change"@en .
+<http://purl.org/datanode/ns/hasComputation> <http://www.w3.org/2000/01/rdf-schema#label> "has computation"@en .
+<http://purl.org/datanode/ns/isPartOf> <http://www.w3.org/2000/01/rdf-schema#label> "is part of"@en .
+<http://purl.org/datanode/ns/hasDatatypes> <http://www.w3.org/2000/01/rdf-schema#label> "has datatypes"@en .
+<http://purl.org/datanode/ns/metadata> <http://www.w3.org/2000/01/rdf-schema#label> "metadata" .
+<http://purl.org/datanode/ns/hasInference> <http://www.w3.org/2000/01/rdf-schema#label> "has inference"@en .
+<http://purl.org/datanode/ns/datatypesOf> <http://www.w3.org/2000/01/rdf-schema#label> "datatypes of"@en .
+<http://purl.org/datanode/ns/adjacentTo> <http://www.w3.org/2000/01/rdf-schema#label> "adjacent to"@en .
+<http://purl.org/datanode/ns/isUpdatedVersionOf> <http://www.w3.org/2000/01/rdf-schema#label> "updated version of"@en .
+<http://purl.org/datanode/ns/isDerivationOf> <http://www.w3.org/2000/01/rdf-schema#label> "is derivation of"@en .
+<http://purl.org/datanode/ns/previousVersionOf> <http://www.w3.org/2000/01/rdf-schema#label> "previous version of"@en .
+<http://purl.org/datanode/ns/hasDependency> <http://www.w3.org/2000/01/rdf-schema#label> "has dependency"@en .
+<http://purl.org/datanode/ns/isUpdateOf> <http://www.w3.org/2000/01/rdf-schema#label> "is update of"@en .
+<http://purl.org/datanode/ns/references> <http://www.w3.org/2000/01/rdf-schema#label> "references"@en .
+<http://purl.org/datanode/ns/processedFrom> <http://www.w3.org/2000/01/rdf-schema#label> "processed from"@en .
+<http://purl.org/datanode/ns/hasTypes> <http://www.w3.org/2000/01/rdf-schema#label> "has types"@en .
+<http://purl.org/datanode/ns/refactoredInto> <http://www.w3.org/2000/01/rdf-schema#label> "refactored into"@en .
+<http://purl.org/datanode/ns/isSelectionOf> <http://www.w3.org/2000/01/rdf-schema#label> "is selection of"@en .
+<http://purl.org/datanode/ns/isCacheOf> <http://www.w3.org/2000/01/rdf-schema#label> "is cache of"@en .
+<http://purl.org/datanode/ns/hasSelection> <http://www.w3.org/2000/01/rdf-schema#label> "has selection"@en .
+<http://purl.org/datanode/ns/typesOf> <http://www.w3.org/2000/01/rdf-schema#label> "types of"@en .
+<http://purl.org/datanode/ns/hasCopy> <http://www.w3.org/2000/01/rdf-schema#label> "has copy"@en .
+<http://purl.org/datanode/ns/isExtractionOf> <http://www.w3.org/2000/01/rdf-schema#label> "extraction of"@en .
+<http://purl.org/datanode/ns/hasIdentifiers> <http://www.w3.org/2000/01/rdf-schema#label> "has identifiers"@en .
+<http://purl.org/datanode/ns/attachedTo> <http://www.w3.org/2000/01/rdf-schema#label> "attached to"@en .
+<http://purl.org/datanode/ns/hasAttached> <http://www.w3.org/2000/01/rdf-schema#label> "has attached"@en .
+<http://purl.org/datanode/ns/disjointCapabilityWith> <http://www.w3.org/2000/01/rdf-schema#label> "disjoint capability"@en .
+<http://purl.org/datanode/ns/isStatisticOf> <http://www.w3.org/2000/01/rdf-schema#label> "is statistic of"@en .
+<http://purl.org/datanode/ns/inconsistentWith> <http://www.w3.org/2000/01/rdf-schema#label> "inconsistent with"@en .
+<http://purl.org/datanode/ns/isSectionOf> <http://www.w3.org/2000/01/rdf-schema#label> "is section of"@en .
+<http://purl.org/datanode/ns/isPortionOf> <http://www.w3.org/2000/01/rdf-schema#label> "is portion of"@en .
+<http://purl.org/datanode/ns/hasSnapshot> <http://www.w3.org/2000/01/rdf-schema#label> "has snapshot"@en .
+<http://purl.org/datanode/ns/isAdditionOf> <http://www.w3.org/2000/01/rdf-schema#label> "is addition of"@en .
+<http://purl.org/datanode/ns/hasStatistic> <http://www.w3.org/2000/01/rdf-schema#label> "has statistic"@en .
+<http://purl.org/datanode/ns/isCopyOf> <http://www.w3.org/2000/01/rdf-schema#label> "is copy of"@en .
+<http://purl.org/datanode/ns/overlappingVocabularyWith> <http://www.w3.org/2000/01/rdf-schema#label> "overlapping vocabulary with"@en .
+<http://purl.org/datanode/ns/redundantWith> <http://www.w3.org/2000/01/rdf-schema#label> "redundant with"@en .
+<http://purl.org/datanode/ns/hasAttributes> <http://www.w3.org/2000/01/rdf-schema#label> "has attributes"@en .
+<http://purl.org/datanode/ns/processedInto> <http://www.w3.org/2000/01/rdf-schema#label> "processed into"@en .
+<http://purl.org/datanode/ns/samePopulationAs> <http://www.w3.org/2000/01/rdf-schema#label> "same population"@en .
+<http://purl.org/datanode/ns/hasAddition> <http://www.w3.org/2000/01/rdf-schema#label> "has addition"@en .
+<http://purl.org/datanode/ns/Datanode> <http://www.w3.org/2000/01/rdf-schema#label> "A data node"@en .
+<http://purl.org/datanode/ns/consistentWith> <http://www.w3.org/2000/01/rdf-schema#label> "consistent with"@en .
+<http://purl.org/datanode/ns/cleanedFrom> <http://www.w3.org/2000/01/rdf-schema#label> "cleaned from"@end .
+<http://purl.org/datanode/ns/isSnapshotOf> <http://www.w3.org/2000/01/rdf-schema#label> "is snapshot of"@en .
+<http://purl.org/datanode/ns/usesSchema> <http://www.w3.org/2000/01/rdf-schema#label> "uses schema"@en .
+<http://purl.org/datanode/ns/relationsOf> <http://www.w3.org/2000/01/rdf-schema#label> "relations of"@en .
+<http://purl.org/datanode/ns/isStandInOf> <http://www.w3.org/2000/01/rdf-schema#label> "is stand-in of"@en .
+<http://purl.org/datanode/ns/versionOf> <http://www.w3.org/2000/01/rdf-schema#label> "version"@en .
+<http://purl.org/datanode/ns/schemaUsedBy> <http://www.w3.org/2000/01/rdf-schema#label> "schema used by"@en .
+<http://purl.org/datanode/ns/sharesInterpretationWith> <http://www.w3.org/2000/01/rdf-schema#label> "shares interpretation with"@en .
+<http://purl.org/datanode/ns/isExampleOf> <http://www.w3.org/2000/01/rdf-schema#label> "example of"@en .
+<http://purl.org/datanode/ns/hasRelations> <http://www.w3.org/2000/01/rdf-schema#label> "has relations"@en .
+<http://purl.org/datanode/ns/newerVersionOf> <http://www.w3.org/2000/01/rdf-schema#label> "newer version of"@en .
+<http://purl.org/datanode/ns/optimizedInto> <http://www.w3.org/2000/01/rdf-schema#label> "optimized into"@end .
+<http://purl.org/datanode/ns/hasAnonymized> <http://www.w3.org/2000/01/rdf-schema#label> "has anonymized substitute"@en .
+<http://purl.org/datanode/ns/hasPart> <http://www.w3.org/2000/01/rdf-schema#label> "has part"@en .
+<http://purl.org/datanode/ns/hasAnnotation> <http://www.w3.org/2000/01/rdf-schema#label> "has annotation"@en .
+<http://purl.org/datanode/ns/referencedBy> <http://www.w3.org/2000/01/rdf-schema#label> "referenced by"@en .
+<http://purl.org/datanode/ns/isSummarizationOf> <http://www.w3.org/2000/01/rdf-schema#label> "is summarization of"@en .
+<http://purl.org/datanode/ns/hasReification> <http://www.w3.org/2000/01/rdf-schema#label> "has reification"@en .
+<http://purl.org/datanode/ns/hasSummarization> <http://www.w3.org/2000/01/rdf-schema#label> "has summarization"@en .
+<http://purl.org/datanode/ns/differentVocabularyFrom> <http://www.w3.org/2000/01/rdf-schema#label> "different vocabulary from"@en .
+<http://purl.org/datanode/ns/hasDescriptors> <http://www.w3.org/2000/01/rdf-schema#label> "has descriptors"@en .
+<http://purl.org/datanode/ns/cleanedInto> <http://www.w3.org/2000/01/rdf-schema#label> "cleaned into"@end .
+<http://purl.org/datanode/ns/hasSample> <http://www.w3.org/2000/01/rdf-schema#label> "has sample"@en .
+<http://purl.org/datanode/ns/hasUpdate> <http://www.w3.org/2000/01/rdf-schema#label> "has update"@en .
+<http://purl.org/datanode/ns/hasExample> <http://www.w3.org/2000/01/rdf-schema#label> "has example"@en .
+<http://purl.org/datanode/ns/sameCapabilityAs> <http://www.w3.org/2000/01/rdf-schema#label> "same capability as"@en .
+<http://purl.org/datanode/ns/hasUpdatedVersion> <http://www.w3.org/2000/01/rdf-schema#label> "updated version"@en .
+<http://purl.org/datanode/ns/isSampleOf> <http://www.w3.org/2000/01/rdf-schema#label> "is sample of"@en .
+<http://purl.org/datanode/ns/isInferenceOf> <http://www.w3.org/2000/01/rdf-schema#label> "is inference of"@en .
+<http://purl.org/datanode/ns/overlappingCapabilityWith> <http://www.w3.org/2000/01/rdf-schema#label> "overlapping capability with"@en .
+<http://purl.org/datanode/ns/differentPopulationFrom> <http://www.w3.org/2000/01/rdf-schema#label> "different population from"@en .
+<http://purl.org/datanode/ns/> <http://www.w3.org/2000/01/rdf-schema#label> "The Datanode Vocabulary" .
+<http://purl.org/datanode/ns/overlappingPopulationWith> <http://www.w3.org/2000/01/rdf-schema#label> "overlapping population with"@en .
+<http://purl.org/datanode/ns/isAnonymizedOf> <http://www.w3.org/2000/01/rdf-schema#label> "is anonymized substitute of"@en .
+<http://purl.org/datanode/ns/sameVocabularyAs> <http://www.w3.org/2000/01/rdf-schema#label> "same vocabulary"@en .
+<http://purl.org/datanode/ns/isAnnotationOf> <http://www.w3.org/2000/01/rdf-schema#label> "is annotation of"@en .
+<http://purl.org/datanode/ns/disjointSectionWith> <http://www.w3.org/2000/01/rdf-schema#label> "disjoint section with"@en .
+<http://purl.org/datanode/ns/isVocabularyOf> <http://www.w3.org/2000/01/rdf-schema#label> "is vocabulary of"@en .
+<http://purl.org/datanode/ns/combinedIn> <http://www.w3.org/2000/01/rdf-schema#label> "combined in"@en .
+<http://purl.org/datanode/ns/descriptorsOf> <http://www.w3.org/2000/01/rdf-schema#label> "descriptors of"@en .
+<http://purl.org/datanode/ns/isDeletionOf> <http://www.w3.org/2000/01/rdf-schema#label> "is deletion of"@en .
+<http://purl.org/datanode/ns/hasPortion> <http://www.w3.org/2000/01/rdf-schema#label> "has portion"@en .
+<http://purl.org/datanode/ns/olderVersionOf> <http://www.w3.org/2000/01/rdf-schema#label> "older version of"@en .
+<http://purl.org/datanode/ns/describedBy> <http://www.w3.org/2000/01/rdf-schema#label> "described by"@en .
+<http://purl.org/datanode/ns/disjointPartWith> <http://www.w3.org/2000/01/rdf-schema#label> "disjoint part with"@en .
+<http://purl.org/datanode/ns/isComputationOf> <http://www.w3.org/2000/01/rdf-schema#label> "is computation of"@en .
+<http://purl.org/datanode/ns/remodelledTo> <http://www.w3.org/2000/01/rdf-schema#label> "remodelled to"@en .
+<http://purl.org/datanode/ns/hasExtraction> <http://www.w3.org/2000/01/rdf-schema#label> "has extraction"@en .
+<http://purl.org/datanode/ns/attributesOf> <http://www.w3.org/2000/01/rdf-schema#label> "attributes of"@en .
+<http://purl.org/datanode/ns/relatedWith> <http://www.w3.org/2000/01/rdf-schema#label> "related with"@en .
+<http://purl.org/datanode/ns/duplicate> <http://www.w3.org/2000/01/rdf-schema#label> "duplicate"@en .
+<http://purl.org/datanode/ns/describes> <http://www.w3.org/2000/01/rdf-schema#label> "describes"@en .
+<http://purl.org/datanode/ns/hasDerivation> <http://www.w3.org/2000/01/rdf-schema#label> "has derivation"@en .
+<http://purl.org/datanode/ns/remodelledFrom> <http://www.w3.org/2000/01/rdf-schema#label> "remodelled from"@en .
+<http://purl.org/datanode/ns/nextVersionOf> <http://www.w3.org/2000/01/rdf-schema#label> "next version of"@en .
+<http://purl.org/datanode/ns/combinationFrom> <http://www.w3.org/2000/01/rdf-schema#label> "combination from"@en .
+<http://purl.org/datanode/ns/differentCapabilityFrom> <http://www.w3.org/2000/01/rdf-schema#label> "different capability from"@en .
+<http://purl.org/datanode/ns/hasDeletion> <http://www.w3.org/2000/01/rdf-schema#label> "has deletion"@en .
+<http://purl.org/datanode/ns/isInterpretationOf> <http://www.w3.org/2000/01/rdf-schema#label> "is interpretation of"@en .
+<http://purl.org/datanode/ns/refactoredFrom> <http://www.w3.org/2000/01/rdf-schema#label> "refactored from"@en .
+<http://purl.org/datanode/ns/about> <http://www.w3.org/2000/01/rdf-schema#label> "about"@en .
+<http://purl.org/datanode/ns/identifiersOf> <http://www.w3.org/2000/01/rdf-schema#label> "identifiers of"@en .
+<http://purl.org/datanode/ns/hasStandIn> <http://www.w3.org/2000/01/rdf-schema#label> "has stand-in"@en .
+<http://purl.org/datanode/ns/isDependencyOf> <http://www.w3.org/2000/01/rdf-schema#label> "is dependency of"@en .
+<http://purl.org/datanode/ns/isReificationOf> <http://www.w3.org/2000/01/rdf-schema#label> "is reification of"@en .
+<http://purl.org/datanode/ns/hasCache> <http://www.w3.org/2000/01/rdf-schema#label> "has cache"@en .
+<http://purl.org/datanode/ns/linkedBy> <http://www.w3.org/2000/01/rdf-schema#label> "linked by"@en .
+<http://purl.org/datanode/ns/isChangeOf> <http://www.w3.org/2000/01/rdf-schema#label> "is change of"@en .
+<http://purl.org/datanode/ns/hasVocabulary> <http://www.w3.org/2000/01/rdf-schema#label> "has vocabulary"@en .
+<http://purl.org/datanode/ns/hasSection> <http://www.w3.org/2000/01/rdf-schema#label> "has section"@en .
+<http://purl.org/datanode/ns/hasInterpretation> <http://www.w3.org/2000/01/rdf-schema#label> "has interpretation"@en .
+<http://purl.org/datanode/ns/touch> <http://www.w3.org/2000/01/rdf-schema#label> "touch"@en .
+<http://purl.org/datanode/ns/sameIdentityAs> <http://www.w3.org/2000/01/rdf-schema#label> "same identity as"@en .

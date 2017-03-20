@@ -1,0 +1,378 @@
+<?php $resolutionData = $this->get('resolution', array()); ?>
+<form method="POST" onSubmit="return validateForm();" id="explainform">
+<input type="hidden" name="id" value="<?php $this->spit('id'); ?>" />
+<input type="hidden" name="controller" value="explain" />
+<input type="hidden" name="action" value="resolve" />
+<input type="hidden" name="output" value="<?php $this->spit('output'); ?>" />
+<input type="hidden" name="policy" value="<?php $this->spit('policy'); ?>" />
+<input type="hidden" name="issue" value="<?php $this->spit('issue'); ?>" />
+<h2>Propagation trace</h2>
+<?php switch($this->get('issue')): ?>
+<?php case 'tooliswrong': $addcols = 1;?>
+<h4>Conflict: the reasoner is wrong</h4>
+<p>The tool does propagate the policy to the output, but you think it should not.</p>
+<p>Please explain why the reasoner is wrong, in one or both of the following ways:</p>
+<ul>
+<li>Indicate what relation(s) should not propagate the policy using the table below</li>
+<li>Indicate that the dataflow model does not reflect the process of the RapidMiner file, explaining why, in the space below:</li>
+</ul>
+<?php break; case 'toolismissing': $addcols = 2; ?>
+<h4>Conflict: the reasoner is incomplete</h4>
+<p>The tool does not propagate the policy to the output, but you think it should.</p>
+<p>Please explain why the reasoner is incomplete, in one or both of the following ways:</p>
+<ul>
+<li>Indicate what relation(s) should propagate the policy using the table below</li>
+<li>Indicate that the dataflow model does not reflect the process of the RapidMiner file, explaining why, in the space below:</li>
+</ul>
+<?php break; case 'dontknow':  $addcols = false;?>
+<h4>Problem: cannot decide</h4>
+<div class="form-group">
+<label for="whydontknow">Why don't know?</label>
+<textarea class="form-control" name="whydontknow"><?php print @$resolutionData['whydontknow']; ?></textarea>
+</div>
+<p>After looking at the explanation below, do you agree with the tool?</p>
+<div class="form-group">
+	<div class="radio">
+		<label>
+			<input type="radio" name="agreewithtool" value="1" <?php if(@$resolutionData['agreewithtool'] == '1'): print 'checked="checked"'; endif;?>/> Yes, I agree
+		</label>
+	</div>
+	<div class="radio">
+		<label>
+			<input type="radio" name="agreewithtool" value="-1" <?php if(@$resolutionData['agreewithtool'] == '-1'): print 'checked="checked"'; endif;?>/> No, I disagree
+		</label>
+	</div>
+	<div class="radio">
+		<label>
+			<input type="radio" name="agreewithtool" value="0" <?php if(@$resolutionData['agreewithtool'] == '0'): print 'checked="checked"'; endif;?>/> Still Don't Know
+		</label>
+	</div>
+</div>
+<?php break;
+default:  $addcols = false;?>
+<?php endswitch;?>
+
+<?php switch($this->get('issue')): ?>
+<?php case 'tooliswrong':?>
+<?php case 'toolismissing':?>
+<div class="form-group">
+<textarea class="form-control" name="incompleteinfo"><?php print @$resolutionData['incompleteinfo']; ?></textarea>
+</div>
+<?php endswitch;?>
+
+<div class="form-group">
+	<div class="col-lg-12" style="text-align:center">
+		<div class="btn-group btn-group-lg">
+			<button type="button" class="btn-lg btn btn-primary" onClick="location.href='<?php print route('task','task', array('id'=>$this->get('id')));?>'"><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Back to task</button>
+			<?php if($this->get('issue') != 'none'): ?>
+			<button type="submit" class="btn-lg btn btn-success"><i class="glyphicon glyphicon-check"></i>&nbsp;Resolve</button>
+			<?php endif;?>
+		</div>
+	</div>
+	<p>&nbsp;</p>
+</div>
+<div class="form-group">
+<div class="col-lg-5"><div id="canvas-svg"></div></div>
+<div class="col-lg-7" id="canvas-list">
+<table class="data table-bordered">
+<thead style="background-color: #e2e2e2">
+<tr>
+<th >Policy</th>
+<th colspan="<?php print ($addcols)?4:3; ?>"><?php $p=explode(' ', $this->get('policy')); print $p[0] ?> <a href="<?php print $p[1];?>" target="_blank"><?php print $this->localName($p[1]); ?></a></th>
+</tr>
+<tr>
+<th>Output</th>
+<th colspan="<?php print ($addcols)?4:3;?>"><?php print $this->localName($this->get('output')); ?></th>
+</tr>
+</thead>
+<thead style="background-color:#f3f3f3">
+<tr>
+	<th>From</th>
+	<th>Property</th>
+	<th>To</th>
+	<th><i class="glyphicon glyphicon-tick"></i></th>
+<?php if($addcols): ?><th><i class="glyphicon glyphicon-edit"></i></th><?php endif; ?>
+</tr>
+</thead>
+<tbody>
+<?php $trace = $this->get('trace', array()); 
+$nodes = $trace['nodes'];
+$links = array_reverse($trace['links']); ?>
+<?php foreach( $links as $link):?>
+<?php $names = explode(',',$link->name); ?>
+<?php foreach($names as $name): $ppr = $link->ppr[$name];?>
+<tr data-link="<?php print $nodes[$link->source]->name . '--' . $nodes[$link->target]->name; ?>" class="<?php if($ppr): print 'propagates'; else: print 'blocks'; endif;?>">
+	<td data-source="<?php print $nodes[$link->source]->name; ?>">
+		<a onClick="nodefocus('<?php print $nodes[$link->source]->name; ?>')" class="pull-right btn btn-xs btn-default"><?php print $nodes[$link->source]->name; ?></a>
+	</td>
+	<td><a onClick="dnhelp('<?php print $name; ?>')" class="pull-right btn btn-xs btn-default"><?php print $name; ?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a></td>
+	<td data-target="<?php print $nodes[$link->target]->name; ?>"><a onClick="nodefocus('<?php print $nodes[$link->target]->name; ?>')" class=" btn btn-xs btn-default"><?php print $nodes[$link->target]->name; ?></a></td>
+	<td>
+	<a onClick="linkfocus('<?php print $nodes[$link->source]->name . '--' . $nodes[$link->target]->name; ?>')" class="pull-right btn btn-xs btn-<?php if($ppr): print 'success'; else: print 'danger'; endif;?>">
+	<i class="glyphicon glyphicon-<?php if($ppr): print 'ok-circle'; else: print 'ban-circle'; endif;?>"></i></a></td>
+<?php if($addcols): ?><td><?php if(($addcols == 1 && $ppr)||($addcols == 2 && !$ppr)): ?><input type="checkbox" value="<?php print $addcols == 2 ? 'should' : 'should not';?>" name="wrong[<?php print $nodes[$link->source]->name . ']['.$name.'][' . $nodes[$link->target]->name; ?>]"
+<?php if(isset($resolutionData['wrong'][$nodes[$link->source]->name][$name][$nodes[$link->target]->name])): print 'checked="checked"'; endif;?>/><?php endif; ?></td><?php endif; ?>
+</tr>
+<?php endforeach;?>
+<?php endforeach;?>
+</tbody>
+</table>
+</div>
+</div>
+</form>
+<?php $this->partial('dnhelp', $this->getAll());?>
+<style>
+  #canvas-svg {
+  	border: 2px solid #CCCCCC;
+    width: 450px;
+  }
+
+  .node rect {
+    cursor: pointer;
+    fill-opacity: .1;
+    shape-rendering: crispEdges;
+  }
+  .node rect:hover{
+  	fill-opacity: .9;
+  }
+  .node[selected] rect{
+  	fill-opacity: 1;
+  }
+  .node text {
+    pointer-events: none;
+    text-shadow: 0 1px 0 #fff;
+  }
+
+  .link {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .3;
+    cursor:pointer;
+  }
+  .link.propagates{
+    stroke: rgb(0,255,0);
+  }
+  .link.blocks{
+    stroke: rgb(255,0,0);
+  }
+  .link[selected] {
+    stroke-opacity: 1;
+  }
+
+  .link:hover {
+    stroke-opacity: 1;
+  }
+  
+  svg defs #arrow {
+  	fill-opacity: .3;
+  } 
+
+  div table tr.highlight.propagates td{
+  	background-color: rgba(0,255,0,.6);
+  }
+  
+  div table tr.highlight.blocks td{
+  	background-color: rgba(255,0,0,.6);
+  }
+  div table td.highlight {
+  	background-color: #999999 ;
+  }
+  table tr.hover.propagates td {
+  	background-color: rgba(0,255,0,.2);
+  }
+  table tr.hover.blocks td {
+    background-color: rgba(255,0,0,.2);
+  }
+  table td.hover {
+  	background-color: #999999 ;
+  }
+</style>
+<script>
+
+var data = <?php print json_encode($this->get('trace', array()));?>;
+
+var renderDiagram = function (data){
+var relcount = data.relcount;
+var margin = {top: 8, right: 30, bottom: 8, left: 5},
+    width = (relcount*30) + 500 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
+
+var formatNumber = d3.format(",.0f"),
+    format = function(d) { return formatNumber(d) + ""; },
+    color = d3.scaleOrdinal(d3.schemeCategory20);
+
+var svg = d3.select("#canvas-svg").append("svg")
+    .attr("width", height + margin.top + margin.bottom)
+    .attr("height", width + margin.left + margin.right)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ") rotate(0)");
+
+var sankey = d3.sankey()
+    .nodeWidth(20)
+    .nodePadding(8)
+    .size([width, height]);
+
+var path = sankey.link();
+
+var energy = data;
+
+sankey
+    .nodes(energy.nodes)
+    .links(energy.links)
+    .layout(132);
+
+var link = svg.append("g")
+    .attr("class", "link-group")
+    .attr("transform", "translate(" + height + ", " + 0 + ") rotate(90)")
+    .selectAll(".link")
+    .data(energy.links)
+    .enter().append("path")
+    .attr("d", path)
+    .style("stroke-width", function(d) { return d.value*5; })
+    .attr("class", function(d) { return (d.propagates)?"link propagates":"link blocks" ; })
+    .sort(function(a, b) { return b.dy - a.dy; });
+
+svg.append("defs").append("marker")
+	.attr("id","arrow")	
+	.attr("viewBox","0 -5 10 10")
+	.attr("refX", 5)
+	.attr("refY", 0)
+	.attr("markerWidth", 2.5)
+	.attr("markerHeight", 2.5)
+	.attr("orient","auto")
+.append("path")
+	.attr("d", "M0,-5L10,0L0,5")
+	.attr("class","arrowHead");
+
+link.attr("marker-end", "url(#arrow)");
+link.attr("id",function(d){return (d.source.name + '--' + d.target.name)});
+link.append("title")
+    .text(function(d) { return d.source.name + " → " + d.name + " → " + d.target.name;}); // + "\n" + format(d.value); 
+
+// Link to table
+link.on("mouseover", function(d){
+	$('tr[data-link="' + (d.source.name + '--' + d.target.name) + '"]').addClass('hover');
+}).on("mouseout", function(d){
+	if(!$(this).attr("selected")){
+		$('tr[data-link="' + (d.source.name + '--' + d.target.name) + '"]').removeClass('hover');
+	}
+}).on("click", function(d){
+	linkfocus($(this).attr("id"));
+});
+
+var node = svg
+    .append("g")
+    .attr("transform", "translate(" + height + ", " + 0 + ") rotate(90)")
+    .selectAll(".node")
+    .data(energy.nodes)
+    .enter().append("g")
+    .attr("class", "node")
+    .attr("id", function(d){
+        return d.name;
+     })
+    .attr("transform", function(d) { return "translate(" + (d.x) + "," + (d.y) + ")"; })
+    .call(d3.drag()
+    .subject(function(d) { return d; })
+    .on("start", function() { this.parentNode.appendChild(this); })
+    .on("drag", dragmove))
+    .on("mouseover", function(d){
+		$('td[data-source="' + (d.name) + '"]').addClass('hover');
+		$('td[data-target="' + (d.name) + '"]').addClass('hover');
+	}).on("mouseout", function(d){
+		if(!$(this).attr("selected")){
+			$('td[data-source="' + (d.name) + '"]').removeClass('hover');
+			$('td[data-target="' + (d.name) + '"]').removeClass('hover');
+		}
+	}).on("click", function(d){
+		nodefocus(d.name);
+});
+
+node.append("rect")
+    .attr("height", function(d) { return d.dy; })
+    .attr("width", sankey.nodeWidth() )
+    .style("fill", function(d) { return d.color = color(d.name.replace(/ .*/, "")); })
+    .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
+    .append("title")
+    .text(function(d) { return d.name; }); 
+
+node.append("text")
+    .attr("x", 0) 
+    .attr("y", function(d) { return d.dx+10; })
+    .attr("dy", ".35em")
+    .attr("text-anchor", "end")
+    .attr("transform", "rotate(-90)")
+    .text(function(d) { return d.name; })
+    ;
+
+function dragmove(d) {
+  d3.select(this).attr("transform", "translate(" + d.x + "," + (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) + ")");
+  sankey.relayout();
+  link.attr("d", path);
+}
+	
+}
+
+$(document).ready(function(){
+	renderDiagram(data);
+});
+
+function validateForm(){
+	var ready = true;
+	if(<?php print $this->get('issue') === 'dontknow' ? 1: 0; ?> ){
+		var radioval = ($('input[name="agreewithtool"]:checked', '#explainform').val());
+		var areafilled = ($('textarea[name="whydontknow"]', '#explainform').val().trim());
+		if(typeof radioval === 'undefined' || areafilled == ''){
+			alert('Please tell us why you don\'t know and whether you agree with the tool now.');
+			ready = false;
+		}
+	}else
+	if(<?php print $this->get('issue') === 'tooliswrong' ? 1: 0; ?>  || <?php print $this->get('issue') === 'toolismissing' ? 1: 0; ?>){
+		var wrongChecked = ($('input[type="checkbox"]:checked', '#explainform')).length;
+		var areafilled = ($('textarea[name="incompleteinfo"]', '#explainform').val().trim());
+		if(wrongChecked == 0 && !areafilled){
+			alert('Please check the wrong propagation step or provide an explanation.');
+			ready = false;
+		}
+	}
+	return ready;
+}
+
+if (!String.prototype.trim) {
+    (function() {
+        // Make sure we trim BOM and NBSP
+        var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+        String.prototype.trim = function() {
+            return this.replace(rtrim, '');
+        };
+    })();
+}
+
+function nodefocus(name){
+	var node = $("svg #"+name);
+	var set = !node.attr("selected");
+	// Deselect all
+	$("svg [selected]").removeAttr("selected");
+	$('td[data-source]').removeClass('highlight').removeClass('hover');
+	$('td[data-target]').removeClass('highlight').removeClass('hover');
+	$('tr[data-link]').removeClass('highlight').removeClass('hover');
+	node.attr("selected", set);
+	if(set){
+		$('td[data-source="' + (name) + '"]').addClass('highlight');
+		$('td[data-target="' + (name) + '"]').addClass('highlight');
+	}
+}
+function linkfocus(linkid){
+	var link = $("#"+linkid);
+	
+	var set = !link.attr("selected");
+	// Deselect all
+	$("svg [selected]").removeAttr("selected");
+	$('tr[data-link]').removeClass('highlight').removeClass('hover');
+	$('td[data-source]').removeClass('highlight').removeClass('hover');
+	$('td[data-target]').removeClass('highlight').removeClass('hover');
+	link.attr("selected", set);
+	if(set){
+		$('tr[data-link="' + (linkid) + '"]').addClass('highlight');
+	}	
+}
+  </script>

@@ -1,0 +1,4 @@
+<p><i><?php print $this->get('task')->description;?></i></p>
+<h2>#<?php print $this->get('phase'); ?> <?php print $this->get('phasedescription',''); ?></h2>
+<?php $this->partial('phase'. $this->get('phase'), $this->getAll());?>
+<?php $this->partial('phaseactions', $this->getAll());?>

@@ -1,0 +1,28 @@
+<table class="data" id="policies">
+<thead>
+<tr>
+	<th></th>
+	<th>Deontic</th>
+	<th>Action</th>
+	<th>Tasks</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach($this->get('policies') as $id => $policy): ?>
+<tr>
+	<td><?php (print @++$c);?></td>
+	<td><?php print $policy['deontic']; ?></td>
+	<td><?php print $this->localName($policy['action']); ?><br>
+	<small><a href="<?php print $policy['action']; ?>" target="_action"><?php print $policy['action']; ?></a></small></td>
+	<td><?php foreach($policy['tasks'] as $t): ?>
+	<?php print $t;?>
+	<?php endforeach;?></td>
+</tr>
+<?php endforeach;?>
+</tbody>
+</table>
+<script>
+$(document).ready(function(){
+    $('#policies').DataTable();
+});
+</script>

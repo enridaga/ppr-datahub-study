@@ -1,0 +1,12 @@
+{
+	"name" : "PPR DataHub User Study",
+	"repositories" : [{
+			"type" : "composer",
+			"url" : "https://packages.zendframework.com/"
+		}
+	],
+	"require" : {
+		"php" : ">=5.3",
+		"semsol/arc2": "^2.3"
+	}
+}

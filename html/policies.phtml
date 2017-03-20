@@ -1,0 +1,19 @@
+
+<p><strong>Permissions:</strong></p>
+<ul>
+<?php foreach($this->get('permission', array()) as $p): ?>
+<li><a href="<?php print $p; ?>" target="_policy"><?php print $this->localName($p);?></a></li>
+<?php endforeach; ?>  
+</ul>
+<p><strong>Prohibitions:</strong></p>
+<ul>
+<?php foreach($this->get('prohibition', array()) as $p): ?>
+<li><a href="<?php print $p; ?>" target="_policy"><?php print $this->localName($p);?></a></li>
+<?php endforeach; ?>  
+</ul>
+<p><strong>Duties:</strong></p>
+<ul>
+<?php foreach($this->get('duty', array()) as $p): ?>
+<li><a href="<?php print $p; ?>" target="_policy"><?php print $this->localName($p);?></a></li>
+<?php endforeach; ?>  
+</ul>

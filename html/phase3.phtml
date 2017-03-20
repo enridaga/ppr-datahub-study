@@ -1,0 +1,60 @@
+<p>The datasets from the MK:DataHub are used as the input for the process. The result is new data, named as shown below.</p>
+<table class="data" >
+<thead>
+<tr>
+<th>Input</th>
+<th>Process</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<?php 
+$ninp = count($this->get('datasets'));
+$nout = count($this->get('outputs'));
+$rmax = $ninp>$nout?$ninp:$nout;
+$ds = $this->get('datasets');
+$inputs = array_keys($this->get('datasets'));
+$outputs = $this->get('outputs');
+$first = TRUE;
+
+function mappingPath($_maps, $_in){
+	$end = TRUE;
+	foreach ($_maps as $m){
+		if($m[0]==$_in){
+			if((strpos($m[0],'_:')!==0)){
+				print ' &#x2192; ';
+			}
+			$end = FALSE;
+			print substr($m[1],strrpos($m[1],'/') + 1);
+			if(strpos($m[2],'_:')!==0){
+				print ' &#x2192; ';
+				print substr($m[2],strrpos($m[2],'#') + 1);
+			}else{
+				print "/";
+			}
+			mappingPath($_maps, $m[2]);
+		}
+	}
+	if($end) print '<br/>';
+}
+
+for($x=0;$x<$rmax;$x++): ?>
+<tr>
+<td>
+<?php if(isset($ds[@$inputs[$x]])): ?>
+	<?php print @$ds[@$inputs[$x]]['title'];?><br/>
+	<?php 
+	mappingPath($this->get('mappings'), @$ds[@$inputs[$x]]['id']);
+	?>
+<?php endif; ?>
+	</td>
+<?php if($first):?>
+<td rowspan="<?php print $rmax; ?>"><?php print $this->get('id');?></td>
+<?php $first= FALSE; endif;?>
+<?php if(isset($outputs[$x])):?>
+<td><?php print substr(@$outputs[$x],strpos(@$outputs[$x],'#') + 1); ?></td>
+<?php endif;?>
+</tr>
+<?php endfor;?>
+</tbody>
+</table>

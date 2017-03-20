@@ -1,0 +1,27 @@
+<div class="actions btn-group">
+<?php foreach($this->get('actions', array()) as $label => $href): ?>
+<?php
+
+	if (is_array ( $href )) {
+		$icon = $href ['icon'];
+		if (isset ( $href ['type'] )) {
+			$type = $href ['type'];
+		}
+		$href = $href ['href'];
+	}
+	if (! isset ( $icon )) {
+		$icon = '';
+	}
+	if (! isset ( $type )) {
+		$type = 'default';
+	}
+	if ($icon) {
+		$icon = '<i class="glyphicon glyphicon-' . $icon . '"></i>&nbsp;';
+	}
+	?>
+<a
+		class="btn btn-sm btn-<?php print $type; ?> <?php print ($label == $this->get('actions_select','')) ? 'active' : '' ?> <?php print ($href)?'':'disabled';?>"
+		href="<?php print $href; ?>"><?php print $icon; ?><?php print $label; ?></a>
+<?php unset($href, $icon, $type); ?>		
+ <?php endforeach; ?>
+</div>

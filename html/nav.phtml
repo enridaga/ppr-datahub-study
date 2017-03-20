@@ -1,0 +1,39 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="<?php print route(); ?>">PP - User Study</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+		
+			<ul class="nav navbar-nav">
+				<li><a href="<?php print route('tasks'); ?>"><i class="glyphicon glyphicon-list"></i>&nbsp;Tasks</a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-stats"></i>&nbsp;Admin <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="<?php print route('admin'); ?>">Tasks overview</a></li>
+						<li><a href="<?php print route('admin','datanode'); ?>">Datanode Statistics</a></li>
+						<li><a href="<?php print route('admin','policies'); ?>">Policies Statistics</a></li>
+					</ul>
+				</li>
+			</ul>
+			<?php if($this->has('user')): ?>
+			<?php $u = $this->get('user'); ?>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Signed in as <strong><?php print $u['name']?></strong> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+			            <li><a href="<?php print route('default', 'logout'); ?>">Logout</a></li>
+			        </ul>
+				</li>
+			</ul>
+				
+			<?php endif; ?>
+		</div>
+		<!--/.nav-collapse -->
+	</div>
+</nav>

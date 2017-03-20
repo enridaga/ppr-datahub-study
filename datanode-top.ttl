@@ -1,0 +1,19 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dn: <http://purl.org/datanode/ns/> .
+
+<http://purl.org/datanode/ns/> <http://purl.org/dc/terms/creator> "enridaga - enricodaga@gmail.com" .
+<http://purl.org/datanode/ns/> <http://www.w3.org/2002/07/owl#versionInfo> "0.5-SNAPSHOT" .
+<http://purl.org/datanode/ns/> skos:note "<p>Changelog 0.3</p>\n<ol>\n<li>D :isUpdatedVersionOf rdfs:subPropertyOf :olderVersionOf\n<li>D :hasUpdatedVersion rdfs:subPropertyOf :newerVersionOf\n<li>A :isUpdatedVersionOf rdfs:subPropertyOf :nextVersionOf\n<li>A :hasUpdatedVersion rdfs:subPropertyOf :previousVersionOf\n<li>A :versionOf :subPropertyOf :overlappingCapabilityWith\n<li>A :remodelledFrom rdfs:subPropertyOf :overlappingPopulationWith ;\n<li>A :remodelledTo rdfs:subPropertyOf :overlappingPopulationWith ;\n<li>A :isPartOf rdfs:subPropertyOf :overlappingPopulationWith, :overlappingVocabularyWith\n<li>A :duplicate a owl:TransitiveProperty\n<li>A :isCopyOf rdfs:subPropertyOf :sameCapabilityAs\n<li>A :links rdfs:subPropertyOf :overlappingPopulationWith\n<li>A :linkedTo rdfs:subPropertyOf :overlappingPopulationWith\n<li>A \n:sharesInterpretationWith\n\ta owl:TransitiveProperty, owl:SymmetricProperty ;\n\trdfs:label \"shares interpretation with\"@en ;\n\trdfs:comment \"This relates a data node to any datanode that can support its interpretation. They connected nodes might be in the same interpretation model.\"@en .\n:isUpdateOf rdfs:subPropertyOf :sharesInterpretationWith .\n:hasUpdate rdfs:subPropertyOf :sharesInterpretationWith .\n:overlappingPopulation rdfs:subPropertyOf :sharesInterpretationWith .\n:overlappingVocabulary rdfs:subPropertyOf :sharesInterpretationWith .\n:inconsistentWith rdfs:subPropertyOf :sharesInterpretationWith .\n:consistentWith rdfs:subPropertyOf :sharesInterpretationWith .\n:references rdfs:subPropertyOf :sharesInterpretationWith .\n:referencedBy rdfs:subPropertyOf :sharesInterpretationWith .\n:hasVocabulary rdfs:subPropertyOf :sharesInterpretationWith .\n:isVocabularyOf rdfs:subPropertyOf :sharesInterpretationWith .\n<li>Alignments with prov, void and dcat\n</ol> " .
+<http://purl.org/datanode/ns/> dct:description "<p>Naming conventions: <ol><li>camel case <li>has[Noun]/is[Noun]Of <li>[present tense transitive verb]/[past tense verb]By,To,From,... <li>has[Past tense verb]/[past tense verb]To,From,... </ol></p>" .
+
+dn:Datanode a owl:Class ;
+ 	rdfs:comment "A data node is an underspecified data object, in a network of data nodes."@en .
+
+dn:relatedWith 
+	rdfs:range dn:Datanode ;
+	rdfs:domain dn:Datanode .
+

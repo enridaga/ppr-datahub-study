@@ -1,0 +1,78 @@
+<div class="modal fade" tabindex="-1" role="dialog" id="dnhelp">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+	      <div class="modal-comment"></div>
+	      <div class="modal-description"></div>
+	      <div class="modal-note"></div>
+	      <div class=" modal-inv"></div>
+	      <div class=" modal-super"></div>
+	      <div class=" modal-sub"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+<!--         <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+function dnhelp(dnprop){
+	var base='<?php print route('help', 'dn', array('relation'=>''))?>';
+	d3.json(base + dnprop, function(data){
+		var modal = $('#dnhelp');
+		modal.find(".modal-title").html(data.label?data.label:dnprop).append("<br/><small>http://purl.org/datanode/ns/"+dnprop+"</small>");
+		var body = '';
+		if(data.comment) body +="<p>"+data.comment+"</p>";
+		if(data.description) body += data.description;
+		if(data.note){
+			body += '<p class="alert alert-warn">'+data.note+'</p>';
+		}
+		if(data.comment)
+			modal.find(".modal-comment").html("<p>"+data.comment+"</p>").show();
+		else
+			modal.find(".modal-comment").html('').hide();
+		if(data.description)
+			modal.find(".modal-description").html("<p>"+data.description+"</p>").show();
+		else
+			modal.find(".modal-description").html('').hide();
+		if(data.inv)
+			modal.find(".modal-inv").html("<p>Inverse: "+dninfolink(data.inv,data.lbls[data.inv])+"</p>").show();
+		else
+			modal.find(".modal-inv").html('').hide();
+		if(data.note)
+			modal.find(".modal-note").html('<p class="alert alert-info"><i class="glyphicon glyphicon-paperclip"></i>&nbsp;'+data.note+"</p>").show();
+		else
+			modal.find(".modal-note").hide().html('');
+		if(data['super'].length>0){
+			var ul = "Super properties (implied):<ul>";
+			data['super'].forEach(function(el){
+				ul += "<li>"+dninfolink(el,data.lbls[el])+"</li>"
+			});
+			ul += "</ul>";
+			modal.find(".modal-super").html(ul);
+		}else{
+			modal.find(".modal-super").html('');
+		}
+		if(data['sub'].length>0){
+			var ul = "Sub properties:<ul>";
+			data['sub'].forEach(function(el){
+				ul += "<li>"+dninfolink(el,data.lbls[el])+"</li>"
+			});
+			ul += "</ul>";
+			modal.find(".modal-sub").html(ul);
+		}else{
+			modal.find(".modal-sub").html('');
+		}
+		modal.modal();
+	});
+}
+function dninfolink(p,l){
+	p=p.substring(p.lastIndexOf('/')+1);
+	return '<a href="javascript: void(0)" onClick="dnhelp(\''+p+'\');">'+l+'</a>';
+}
+</script>

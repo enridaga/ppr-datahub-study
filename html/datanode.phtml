@@ -1,0 +1,48 @@
+<?php 
+$relations = $this->get('relations');
+$numPprs = $this->get('num-pprs');
+$numInFlows = $this->get('num-in-flows');
+$subs = $this->get('subs');
+$iof = $this->get('iof');
+?>
+<table class="data" id="datanode">
+<thead>
+<tr>
+<th ><span class="pull-right">Relation</span></th>
+<th></th>
+<th>PPRs</th>
+<th>DFs</th>
+<th>DFs (i)</th>
+<th>x</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach($relations as $rel=>$desc):?>
+<?php 
+$n = 0;
+foreach($subs[$rel] as $p){
+	$n+=@$numInFlows[$p];
+}
+if(isset($iof[$rel])){
+	$n+=@$numInFlows[$iof[$rel]];
+}
+?>
+<tr class="<?php if($n == 0 && $numInFlows[$rel] == 0): ?>notmatch<?php endif;?>">
+	<td title="<?php print $rel; ?>"><?php print $desc; ?></td>
+	<td><a onClick="dnhelp('<?php print $this->localName($rel); ?>')" class="pull-right btn btn-xs btn-default">&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a></td>
+	<td><?php print $numPprs[$rel]; ?></td>
+	<td><?php print $numInFlows[$rel]; ?></td>
+	<td><?php
+	print $n;
+	?></td>
+	<td><?php if($n == 0 && $numInFlows[$rel] == 0): ?>x<?php endif;?></td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+<?php $this->partial('dnhelp',$this->getAll());?>
+<script>
+$(document).ready(function(){
+    $('#datanode').DataTable();
+});
+</script>

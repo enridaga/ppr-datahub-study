@@ -1,0 +1,52 @@
+<?php
+?>
+<table class="data">
+<thead>
+<tr>
+<th>Task</th>
+<th>Description</th>
+<?php if($this->get('admin',false)): 
+$numberOfPolicies = $this->get('number-of-policies',array());
+$propagated = $this->get('propagated',array());
+?>
+<th>Policies</th>
+<th>Propagated</th>
+<?php endif; ?>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach($this->get('tasks') as $task):?>
+	<?php $status = $this->get('status'); ?>
+<?php $rowspan=$this->get('admin', FALSE)?count($status[$task->id]['users']):1;?>
+<tr>
+  <td rowspan="<?php print $rowspan; ?>">
+  	<?php if(!$this->get('admin', FALSE)):?><a href="<?php print route('task','task', array('id'=>$task->id));?>"><?php endif;?>
+  	<?php if($this->get('admin', FALSE)):?><a href="<?php print route('admin','dataflow', array('id'=>$task->id));?>"><?php endif;?>
+  	<?php print $task->label; ?>
+  	</a>
+  </td>
+  <td rowspan="<?php print $rowspan; ?>"><?php print $task->description; ?><br/><small>Reuse process: <tt><?php print $task->dataflow;?></tt></small></td>
+  <?php if($this->get('admin', FALSE)): ?>
+  <td rowspan="<?php print $rowspan; ?>"><?php print $numberOfPolicies[$task->id]; ?></td>
+  <td rowspan="<?php print $rowspan; ?>">
+  <ul><?php foreach($propagated[$task->id] as $output => $policies): ?>
+  <li><?php print $this->localName($output);?><ul><?php foreach($policies as $deo => $act):?><?php foreach($act as $ac => $acv):?><li><?php print $deo . ':' . $this->localName($ac); ?></li><?php endforeach; endforeach;?></ul></li>
+  <?php endforeach; ?></ul>
+  </td>
+  <?php endif; ?>
+  <?php if($this->get('admin', FALSE)): ?>
+	<?php $first = TRUE;  foreach($status[$task->id]['users'] as $udat): ?>
+	<?php if(!$first): ?><tr><?php endif; ?><td class="nowrap">
+	<i class="glyphicon glyphicon-<?php print $udat['status']?'check':'unchecked';?>"></i><?php print $udat['name'];?>
+	<?php if($first): ?><?php $first=FALSE; endif; ?>
+	</td></tr>
+	<?php endforeach; ?>
+  <?php else: ?>
+  	<td><i class="glyphicon glyphicon-<?php print (in_array(6,$task->visited))?'check':'unchecked'; ?>"></i></td></tr>
+  <?php endif;?>
+<?php endforeach;?>
+</tbody>
+</table>
+
+

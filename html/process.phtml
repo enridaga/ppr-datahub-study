@@ -1,0 +1,4 @@
+<p><i><?php print $this->get('task')->description;?></i></p>
+<h2>Data flow</h2>
+<?php
+$this->partial('sankey', $this->getAll());

@@ -1,0 +1,70 @@
+
+<p>This phase is about checking the correcteness and completeness of the PPR reasoner. 
+Below is a list of policies that the PPR reasoner believes must be propagated.</p>
+<p>Please resolve all conflicts highlighted in the table below.</p>
+<table class="data table-bordered table-condensed">
+<thead>
+<tr>
+	<th>From</th>
+	<th colspan=2>Policy</th>
+	<th>Output</th>
+	<th title="Certainly not"><i class="sdisagree glyphicon glyphicon-flag"></i></th>
+	<th title="Probably not"><i class="disagree glyphicon glyphicon-flag"></i></th>
+	<th title="I don't Know"><i class="dontknow glyphicon glyphicon-flag"></i></th>
+	<th title="Probably yes"><i class="agree glyphicon glyphicon-flag"></i></th>
+	<th title="Certainly yes"><i class="sagree glyphicon glyphicon-flag"></i></th>
+	<th>&nbsp;</th>
+</tr>
+</thead>
+<tbody>
+<?php 
+$choiceData = $this->get('choice', array()) ; 
+$propagatedData = $this->get('propagated', array()) ; 
+$conflicts = $this->get('conflicts') ; 
+?>
+<?php foreach($this->get('policies') as $output => $choice):?>
+<?php foreach($choice as $deontic => $actions):?>
+<?php foreach($actions as $action => $datasets): $issue = 'none'; ?>
+<tr
+class="<?php if($choiceData[$output][$deontic][$action] > 0 && !isset($propagatedData[$output][$deontic][$action])): $issue='toolismissing'; print 'notmatch'; endif;?>
+<?php if($choiceData[$output][$deontic][$action] < 0 && isset($propagatedData[$output][$deontic][$action])): $issue='tooliswrong'; print 'notmatch'; endif;?>
+<?php if($choiceData[$output][$deontic][$action] == 0 ): $issue='dontknow'; print 'notmatch'; endif;?>"
+>
+	<td><?php print join(',<br/>',$datasets);?>
+	<?php 
+	if(isset($propagatedData[$output][$deontic][$action])):
+	$propagated = 2;// echo "True";
+	else:
+	$propagated = -2; //echo "False";
+	endif;
+	?>
+	</td>
+	<td><?php print $deontic;?></td>
+	<td><a href="<?php print $action;?>"><?php print $this->localName($action);?></a></td>
+	<td><?php print substr(@$output,strpos(@$output,'#') + 1); ?></td>
+	
+	<?php foreach(array('sdisagree' => -2,'disagree'=>-1,'dontknow'=>0,'agree'=>1,'sagree'=>2) as $class => $value): ?>
+	<?php $checked = FALSE; ?>
+	<?php 
+	if(isset($choiceData[$output][$deontic][$action]) && $choiceData[$output][$deontic][$action] == $value): 
+		$checked = TRUE;
+	endif;
+	?>
+	<td class="<?php print $class;?> <?php if($checked):?>selected<?php endif;?>"><?php if($propagated == $value):?><i class="glyphicon glyphicon-asterisk"></i><?php endif;?></td>
+	<?php endforeach; ?>
+	<?php $status = isset($conflicts[$output][$deontic][$action])?$conflicts[$output][$deontic][$action]['status']: FALSE; ?>
+	<td class="button">
+	<?php if($issue == 'none'):?>
+	<a title="Explain..." class="btn btn-primary btn-explain" href="<?php print route('explain','visual', array('id'=>$this->get('id'),'policy' => urlencode($deontic. ' '. $action), 'issue'=>$issue,'output'=>urlencode($output))); ?>"><i class="glyphicon glyphicon-info-sign"></i>&nbsp;Explain</a>
+	<?php elseif($status == 0): ?>
+	<a title="Resolve" class="btn btn-danger btn-explain" href="<?php print route('explain','visual', array('id'=>$this->get('id'),'policy' => urlencode($deontic. ' '. $action), 'issue'=>$issue,'output'=>urlencode($output))); ?>"><i class="glyphicon glyphicon-unchecked"></i>&nbsp;Resolve</a>	
+	<?php elseif($status == 1): ?>
+	<a title="Resolved" class="btn btn-success btn-explain" href="<?php print route('explain','visual', array('id'=>$this->get('id'),'policy' => urlencode($deontic. ' '. $action), 'issue'=>$issue,'output'=>urlencode($output))); ?>"><i class="glyphicon glyphicon-check"></i>&nbsp;Resolved</a>
+	<?php endif;?>
+	</td>
+</tr>
+<?php endforeach; ?>
+<?php endforeach; ?>
+<?php endforeach; ?>
+</tbody>
+</table>
