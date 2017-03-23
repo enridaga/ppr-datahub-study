@@ -78,7 +78,7 @@ default:  $addcols = false;?>
 <thead style="background-color: #e2e2e2">
 <tr>
 <th >Policy</th>
-<th colspan="<?php print ($addcols)?4:3; ?>"><?php $p=explode(' ', $this->get('policy')); print $p[0] ?> <a onClick="acthelp('<?php print $p[1];?>');" href="#" class="btn btn-xs btn-default"><?php print $this->localName($p[1]); ?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a></th>
+<th colspan="<?php print ($addcols)?4:3; ?>"><?php $p=explode(' ', $this->get('policy')); print $p[0] ?> <a onClick="acthelp('<?php print $p[1];?>');" class="btn btn-xs btn-default"><?php print $this->localName($p[1]); ?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a></th>
 </tr>
 <tr>
 <th>Output</th>
