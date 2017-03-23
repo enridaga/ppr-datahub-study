@@ -2,7 +2,17 @@
 require_once 'vendor/semsol/arc2/ARC2.php';
 class DataAccess {
 	private static $_instance;
-	private static $_data_home = '/Users/ed4565/Dropbox/PhD/PropagationEvaluation/analysis';
+	private static $_data_home = NULL;
+	private static function _dataHome(){
+		if(DataAccess::$_data_home == NULL){
+			if($ini = parse_ini_file(__DIR__ . '/properties.ini')){
+				self::$_data_home = $ini['folder.analysis'];
+			}else{
+				throw new Exception("Cannot parse configuration file");
+			}
+		}
+		return self::$_data_home;
+	}
 	const PHASE_COMPLETE = 6;
 	private $_users = array (
 			1000 => 'Administrator',
@@ -154,17 +164,17 @@ class DataAccess {
 	}
 	public function getDownloadFile($taskId) {
 		$task = $this->task ( $taskId );
-		return self::$_data_home . "/data/repository/" . str_replace ( '.ttl', '.rmp', $task->dataflow );
+		return self::_dataHome() . "/data/repository/" . str_replace ( '.ttl', '.rmp', $task->dataflow );
 	}
 	private function _loadDataflow($taskId) {
 		$task = $this->task ( $taskId );
-		$turtleFile = self::$_data_home . '/dataflows/' . $task->dataflow;
+		$turtleFile = self::_dataHome() . '/dataflows/' . $task->dataflow;
 		$parser = ARC2::getTurtleParser ();
 		$parser->parse ( $turtleFile );
 		$triples = $parser->getTriples ();
 		// mappings
 		foreach ( $task->imports as $imp ) {
-			$turtleFile = self::$_data_home . '/tasks/mappings/' . $imp;
+			$turtleFile = self::_dataHome() . '/tasks/mappings/' . $imp;
 			$parser2 = ARC2::getTurtleParser ();
 			$parser2->parse ( $turtleFile );
 			$triples = array_merge ( $triples, $parser2->getTriples () );
@@ -200,7 +210,7 @@ class DataAccess {
 		// Iterate over triples and get the dataset/policies
 		$datasets = array ();
 		foreach ( $task->imports as $import ) {
-			$turtleFile = self::$_data_home . '/tasks/mappings/' . $import;
+			$turtleFile = self::_dataHome() . '/tasks/mappings/' . $import;
 			$parser = ARC2::getTurtleParser ();
 			$parser->parse ( $turtleFile );
 			$triples = $parser->getTriples ();
@@ -234,7 +244,7 @@ class DataAccess {
 		
 		// Policies
 		foreach ( $task->policies as $polfile ) {
-			$turtleFile = self::$_data_home . '/licences/' . $polfile . '.ttl';
+			$turtleFile = self::_dataHome() . '/licences/' . $polfile . '.ttl';
 			$parser = ARC2::getTurtleParser ();
 			$parser->parse ( $turtleFile );
 			$triples = $parser->getTriples ();
@@ -250,7 +260,7 @@ class DataAccess {
 		$task = $this->task ( $taskId );
 		// Taken from the mappings
 		foreach ( $task->imports as $import ) {
-			$turtleFile = self::$_data_home . '/tasks/mappings/' . $import;
+			$turtleFile = self::_dataHome() . '/tasks/mappings/' . $import;
 			$parser = ARC2::getTurtleParser ();
 			$parser->parse ( $turtleFile );
 			$triples = $parser->getTriples ();
@@ -283,7 +293,7 @@ class DataAccess {
 	public function propagated($taskId) {
 		$propagated = NULL;
 		
-		$handle = fopen ( self::$_data_home . "/tasks/results/suite.txt", "r" );
+		$handle = fopen ( self::_dataHome() . "/tasks/results/suite.txt", "r" );
 		if ($handle) {
 			while ( ($line = fgets ( $handle )) !== false ) {
 				// process the line read.
@@ -773,12 +783,12 @@ class DataAccess {
 	}
 	private function _loadCatalogue() {
 		$parser = ARC2::getTurtleParser ();
-		$parser->parse ( self::$_data_home . '/catalogue/datasets.ttl' );
+		$parser->parse ( self::_dataHome() . '/catalogue/datasets.ttl' );
 		$this->_catalogue = $parser->getTriples ();
 	}
 	private function _loadRules() {
 		$parser = ARC2::getTurtleParser ();
-		$parser->parse ( self::$_data_home . '/tasks/kb2/full-rules-cALL.nt' );
+		$parser->parse ( self::_dataHome() . '/tasks/kb2/full-rules-cALL.nt' );
 		$this->_rules = new Rules ( $parser->getTriples () );
 	}
 	public function rules() {
@@ -800,7 +810,7 @@ class DataAccess {
 		return $this->_tasks;
 	}
 	private function _loadTasks() {
-		$tasks = json_decode ( file_get_contents ( self::$_data_home . '/tasks/tasks.json' ) );
+		$tasks = json_decode ( file_get_contents ( self::_dataHome() . '/tasks/tasks.json' ) );
 		$this->_tasks = array ();
 		foreach ( $tasks as $task ) {
 			// Filter out disabled tasks
