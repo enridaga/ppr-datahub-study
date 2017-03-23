@@ -12,7 +12,7 @@
 <tr>
 	<td><?php (print @++$c);?></td>
 	<td><?php print $policy['deontic']; ?></td>
-	<td><?php print $this->localName($policy['action']); ?><br>
+	<td><a class="btn btn-xs btn-default" href="#" onClick="acthelp('<?php print $policy['action'];?>')"><?php print $this->localName($policy['action']); ?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a><br>
 	<small><a href="<?php print $policy['action']; ?>" target="_action"><?php print $policy['action']; ?></a></small></td>
 	<td><?php foreach($policy['tasks'] as $t): ?>
 	<?php print $t;?>
@@ -26,3 +26,4 @@ $(document).ready(function(){
     $('#policies').DataTable();
 });
 </script>
+<?php $this->partial('dnhelp', $this->getAll());?>

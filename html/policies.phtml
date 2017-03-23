@@ -1,19 +1,20 @@
-
-<p><strong>Permissions:</strong></p>
-<ul>
+<table class="data">
+<tr><th>Permissions:</th>
+<td>
 <?php foreach($this->get('permission', array()) as $p): ?>
-<li><a href="<?php print $p; ?>" target="_policy"><?php print $this->localName($p);?></a></li>
+<a class="btn btn-xs btn-default" href="#" onClick="acthelp('<?php print $p; ?>')"><?php print $this->localName($p);?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a>
 <?php endforeach; ?>  
-</ul>
-<p><strong>Prohibitions:</strong></p>
-<ul>
+</td></tr>
+<tr><th>Prohibitions:</th>
+<td>
 <?php foreach($this->get('prohibition', array()) as $p): ?>
-<li><a href="<?php print $p; ?>" target="_policy"><?php print $this->localName($p);?></a></li>
+<a class="btn btn-xs btn-default" href="#" onClick="acthelp('<?php print $p; ?>')"><?php print $this->localName($p);?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a>
 <?php endforeach; ?>  
-</ul>
-<p><strong>Duties:</strong></p>
-<ul>
+</td></tr>
+<tr><th>Duties:</th>
+<td>
 <?php foreach($this->get('duty', array()) as $p): ?>
-<li><a href="<?php print $p; ?>" target="_policy"><?php print $this->localName($p);?></a></li>
+<a class="btn btn-xs btn-default" href="#" onClick="acthelp('<?php print $p; ?>')"><?php print $this->localName($p);?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a>
 <?php endforeach; ?>  
-</ul>
+</td></tr>
+</table>

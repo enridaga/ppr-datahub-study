@@ -21,11 +21,20 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <script>
+function acthelp(action){
+	var base='<?php print route('help', 'act', array('activity'=>''))?>';
+	dataUrl = base + encodeURIComponent(action);
+	callHelp(dataUrl, action, action);	
+}
 function dnhelp(dnprop){
 	var base='<?php print route('help', 'dn', array('relation'=>''))?>';
-	d3.json(base + dnprop, function(data){
+	dataUrl = base + encodeURIComponent(dnprop);
+	callHelp(dataUrl, 'http://purl.org/datanode/ns/'+dnprop, dnprop);
+}
+function callHelp(dataUrl, uri, dnprop){
+	d3.json(dataUrl, function(data){
 		var modal = $('#dnhelp');
-		modal.find(".modal-title").html(data.label?data.label:dnprop).append("<br/><small>http://purl.org/datanode/ns/"+dnprop+"</small>");
+		modal.find(".modal-title").html(data.label?data.label:dnprop).append("<br/><small>"+uri+"</small>");
 		var body = '';
 		if(data.comment) body +="<p>"+data.comment+"</p>";
 		if(data.description) body += data.description;

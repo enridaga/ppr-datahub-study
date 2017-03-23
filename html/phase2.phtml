@@ -4,3 +4,4 @@
 <?php $this->partial('policies',$dataset['policies']);?>
 <?php endforeach;?>
 <p class="alert alert-success"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;When you are confident that you have a good understanding of the input datasets, you can move to the next phase.</p>
+<?php $this->partial('dnhelp', $this->getAll());?>

@@ -72,13 +72,13 @@ default:  $addcols = false;?>
 	<p>&nbsp;</p>
 </div>
 <div class="form-group">
-<div class="col-lg-5"><div id="canvas-svg"></div></div>
-<div class="col-lg-7" id="canvas-list">
+<div class="col-lg-6"><div id="canvas-svg"></div></div>
+<div class="col-lg-6" id="canvas-list">
 <table class="data table-bordered">
 <thead style="background-color: #e2e2e2">
 <tr>
 <th >Policy</th>
-<th colspan="<?php print ($addcols)?4:3; ?>"><?php $p=explode(' ', $this->get('policy')); print $p[0] ?> <a href="<?php print $p[1];?>" target="_blank"><?php print $this->localName($p[1]); ?></a></th>
+<th colspan="<?php print ($addcols)?4:3; ?>"><?php $p=explode(' ', $this->get('policy')); print $p[0] ?> <a onClick="acthelp('<?php print $p[1];?>');" href="#" class="btn btn-xs btn-default"><?php print $this->localName($p[1]); ?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a></th>
 </tr>
 <tr>
 <th>Output</th>
@@ -97,20 +97,22 @@ default:  $addcols = false;?>
 <tbody>
 <?php $trace = $this->get('trace', array()); 
 $nodes = $trace['nodes'];
+$clen=20;
 $links = array_reverse($trace['links']); ?>
 <?php foreach( $links as $link):?>
 <?php $names = explode(',',$link->name); ?>
 <?php foreach($names as $name): $ppr = $link->ppr[$name];?>
 <tr data-link="<?php print $nodes[$link->source]->name . '--' . $nodes[$link->target]->name; ?>" class="<?php if($ppr): print 'propagates'; else: print 'blocks'; endif;?>">
 	<td data-source="<?php print $nodes[$link->source]->name; ?>">
-		<a onClick="nodefocus('<?php print $nodes[$link->source]->name; ?>')" class="pull-right btn btn-xs btn-default"><?php print $nodes[$link->source]->name; ?></a>
+		<a title="<?php print $nodes[$link->source]->name; ?>" onClick="nodefocus('<?php print $nodes[$link->source]->name; ?>')" class="pull-right btn btn-xs btn-default"><?php print $this->cropped($nodes[$link->source]->name,$clen); ?></a>
 	</td>
 	<td><a onClick="dnhelp('<?php print $name; ?>')" class="pull-right btn btn-xs btn-default"><?php print $name; ?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a></td>
 	<td data-target="<?php print $nodes[$link->target]->name; ?>"><a onClick="nodefocus('<?php print $nodes[$link->target]->name; ?>')" class=" btn btn-xs btn-default"><?php print $nodes[$link->target]->name; ?></a></td>
 	<td>
-	<a onClick="linkfocus('<?php print $nodes[$link->source]->name . '--' . $nodes[$link->target]->name; ?>')" class="pull-right btn btn-xs btn-<?php if($ppr): print 'success'; else: print 'danger'; endif;?>">
+	<a title="<?php print $nodes[$link->target]->name; ?>" onClick="linkfocus('<?php print $nodes[$link->source]->name . '--' . $nodes[$link->target]->name; ?>')" class="pull-right btn btn-xs btn-<?php if($ppr): print 'success'; else: print 'danger'; endif;?>">
 	<i class="glyphicon glyphicon-<?php if($ppr): print 'ok-circle'; else: print 'ban-circle'; endif;?>"></i></a></td>
-<?php if($addcols): ?><td><?php if(($addcols == 1 && $ppr)||($addcols == 2 && !$ppr)): ?><input type="checkbox" value="<?php print $addcols == 2 ? 'should' : 'should not';?>" name="wrong[<?php print $nodes[$link->source]->name . ']['.$name.'][' . $nodes[$link->target]->name; ?>]"
+<?php if($addcols): ?><td><?php if(($addcols == 1 && $ppr)||($addcols == 2 && !$ppr)): ?>
+<input class="chkwrong" data-relation="<?php print $name;?>" type="checkbox" value="<?php print $addcols == 2 ? 'should' : 'should not';?>" name="wrong[<?php print $nodes[$link->source]->name . ']['.$name.'][' . $nodes[$link->target]->name; ?>]"
 <?php if(isset($resolutionData['wrong'][$nodes[$link->source]->name][$name][$nodes[$link->target]->name])): print 'checked="checked"'; endif;?>/><?php endif; ?></td><?php endif; ?>
 </tr>
 <?php endforeach;?>
@@ -120,11 +122,24 @@ $links = array_reverse($trace['links']); ?>
 </div>
 </div>
 </form>
+<script>
+$(document).ready(function(){
+	$(".chkwrong").change(function(){
+		var checked = this.checked;
+		var relation = $(this).data("relation");
+		if(checked){
+			$("[data-relation='"+relation+"']").prop("checked","checked");
+		}else{
+			$("[data-relation='"+relation+"']").prop("checked","");
+		}
+	});
+});
+</script>
 <?php $this->partial('dnhelp', $this->getAll());?>
 <style>
   #canvas-svg {
   	border: 2px solid #CCCCCC;
-    width: 450px;
+    width: <?php print $this->get('width', 450); ?>px;
   }
 
   .node rect {
@@ -195,7 +210,7 @@ var renderDiagram = function (data){
 var relcount = data.relcount;
 var margin = {top: 8, right: 30, bottom: 8, left: 5},
     width = (relcount*30) + 500 - margin.left - margin.right,
-    height = 450 - margin.top - margin.bottom;
+    height = <?php print $this->get('width', 450); ?> - margin.top - margin.bottom;
 
 var formatNumber = d3.format(",.0f"),
     format = function(d) { return formatNumber(d) + ""; },
@@ -301,7 +316,7 @@ node.append("text")
     .attr("dy", ".35em")
     .attr("text-anchor", "end")
     .attr("transform", "rotate(-90)")
-    .text(function(d) { return d.name; })
+    .text(function(d) { return (d.name.length <=20)? d.name:(d.name.substr(0,17)+' ...'); })
     ;
 
 function dragmove(d) {

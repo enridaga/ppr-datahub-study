@@ -40,7 +40,7 @@ class="<?php if($choiceData[$output][$deontic][$action] > 0 && !isset($propagate
 	?>
 	</td>
 	<td><?php print $deontic;?></td>
-	<td><a href="<?php print $action;?>"><?php print $this->localName($action);?></a></td>
+	<td><a class="btn btn-xs btn-default" href="#" onClick="acthelp('<?php print $action;?>');"><?php print $this->localName($action);?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a></td>
 	<td><?php print substr(@$output,strpos(@$output,'#') + 1); ?></td>
 	
 	<?php foreach(array('sdisagree' => -2,'disagree'=>-1,'dontknow'=>0,'agree'=>1,'sagree'=>2) as $class => $value): ?>
@@ -68,3 +68,4 @@ class="<?php if($choiceData[$output][$deontic][$action] > 0 && !isset($propagate
 <?php endforeach; ?>
 </tbody>
 </table>
+<?php $this->partial('dnhelp', $this->getAll());?>

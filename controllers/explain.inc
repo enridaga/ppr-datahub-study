@@ -34,6 +34,7 @@ class ExplainController extends DefaultController {
 		$m['data']['output'] = $this->_output;
 		$m['data']['task'] = DataAccess::instance()->task($this->_task);
 		$m['data']['issue'] = $this->_issue;
+		$m['data']['width'] = 550;
 		$m['title'] = $m['data']['task']->label;
 		$m['data']['trace'] = DataAccess::instance()->sankey($this->_task)->trace($this->_policy, $this->_output);
 		$m['data']['resolution'] = DataAccess::instance()->resolution($this->_userid(), $this->_task, $this->_policy, $this->_output);
