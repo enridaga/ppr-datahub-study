@@ -74,7 +74,7 @@ default:  $addcols = false;?>
 <div class="form-group">
 <div class="col-lg-6"><div id="canvas-svg"></div></div>
 <div class="col-lg-6" id="canvas-list">
-<table class="data table-bordered">
+<table class="data table-bordered" id="traceTable">
 <thead style="background-color: #e2e2e2">
 <tr>
 <th >Policy</th>
@@ -102,7 +102,7 @@ $links = array_reverse($trace['links']); ?>
 <?php foreach( $links as $link):?>
 <?php $names = explode(',',$link->name); ?>
 <?php foreach($names as $name): $ppr = $link->ppr[$name];?>
-<tr data-link="<?php print $nodes[$link->source]->name . '--' . $nodes[$link->target]->name; ?>" class="<?php if($ppr): print 'propagates'; else: print 'blocks'; endif;?>">
+<tr data-source="<?php print $link->source; ?>" data-link="<?php print $nodes[$link->source]->name . '--' . $nodes[$link->target]->name; ?>" class="<?php if($ppr): print 'propagates'; else: print 'blocks'; endif;?>">
 	<td data-source="<?php print $nodes[$link->source]->name; ?>">
 		<a title="<?php print $nodes[$link->source]->name; ?>" onClick="nodefocus('<?php print $nodes[$link->source]->name; ?>')" class="pull-right btn btn-xs btn-default"><?php print $this->cropped($nodes[$link->source]->name,$clen); ?></a>
 	</td>
@@ -204,9 +204,28 @@ $(document).ready(function(){
 </style>
 <script>
 
+function sortTable(data){
+	console.log(data);
+	var table = $("#traceTable");
+    var rows = table.find('tr:gt(2)').toArray().sort(sortTableComparer());
+   // for (var i = 0; i < rows.length; i++){table.append(rows[i])}
+}
+function sortTableComparer() {
+    return function(a, b) {
+        var valA = getLinkSource(a), valB = getLinkSource(b)
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
+    }
+}
+function getLinkSource(tr){
+	return data.nodes[$(tr).data("source")].x;
+}
+
+
+/* DIAGRAM */
 var data = <?php print json_encode($this->get('trace', array()));?>;
 
 var renderDiagram = function (data){
+
 var relcount = data.relcount;
 var margin = {top: 8, right: 30, bottom: 8, left: 5},
     width = (relcount*30) + 500 - margin.left - margin.right,
@@ -230,11 +249,13 @@ var sankey = d3.sankey()
 var path = sankey.link();
 
 var energy = data;
-
 sankey
     .nodes(energy.nodes)
     .links(energy.links)
     .layout(132);
+
+// Sort the table using layout data
+sortTable(energy);
 
 var link = svg.append("g")
     .attr("class", "link-group")

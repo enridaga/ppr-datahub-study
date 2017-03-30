@@ -16,47 +16,41 @@ class DataAccess {
 	const PHASE_COMPLETE = 6;
 	private $_users = array (
 			1000 => 'Administrator',
-			1 => 'Team 1',
-			2 => 'Team 2',
-			3 => 'Team 3',
-			4 => 'Team 4',
-			5 => 'Team 5' 
+			1 => 'CAAN',
+			2 => 'NIFR',
+			3 => 'ILAN',
+			4 => 'ALPA',
+			5 => 'MAPI' 
 	);
 	private $_users_tasks = array (
 			1000 => array (
-					'scrape-website-2',
+/*					'scrape-website-2',
 					'lift-chart-1',
 					'statistic-textual-1',
 					'moving-average-1',
 					'sensor-cleaning-1',
-					'classifier-textual-1' 
+					'classifier-textual-1',*/
+					'TUTORIAL',
+					'CLOUD',
+					'CLEAN',
+					'SCRAPE',
+					'AVG',
+					'FOOD'
 			)
-			// 'scrape-website-1'
+			, // CAAN
+			1 => array ('CLOUD','CLEAN')
 			,
-			1 => array (
-					'scrape-website-2',
-					'lift-chart-1',
-					'statistic-textual-1' 
-			)
-			// 'classifier-textual-1',
-			// 'scrape-website-1'
+			// NIFR
+			2 => array ('FOOD','AVG')
 			,
-			2 => array ()
-			// 'classifier-textual-1',
-			// 'classifier-numerical-1'
+			// ILAN
+			3 => array ('SCRAPE','CLEAN')
 			,
-			3 => array ()
-			// 'classifier-numerical-1',
-			// 'moving-average-1'
+			// ALPA
+			4 => array ('FOOD','CLOUD')
 			,
-			4 => array ()
-			// 'moving-average-1',
-			// 'lift-chart-1'
-			,
-			5 => array ()
-			// 'lift-chart-1',
-			// 'scrape-website-1'
-			 
+			// MAPI
+			5 => array ('AVG','SCRAPE')			 
 	);
 	private $_tasks = NULL;
 	private $_catalogue = NULL;

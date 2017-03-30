@@ -4,3 +4,4 @@
 composer.lock
 vendor/
 properties.ini
+/.DS_Store
