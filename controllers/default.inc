@@ -10,7 +10,7 @@ class DefaultController extends MVC_Controller {
 		
 		// Setup model
 		$this->_model = array(
-			'title' => '',
+			'title' => 'PPR User Study',
 			'nav' => array(),
 			'page' => 'index',
 			'data' => array()
@@ -118,7 +118,7 @@ class DefaultController extends MVC_Controller {
 		$model = $this->model();
 		$model['page'] = 'login';
 		$model['hidenav'] = true;
-		$model['title'] = 'contento';
+
 		if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 			$ret = $this->validate(array('username' => array('NotNull', 'NotEmpty'),'password' => array('NotNull', 'NotEmpty')));
 			if(count($ret) == 0){
