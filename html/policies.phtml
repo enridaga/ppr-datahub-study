@@ -2,19 +2,19 @@
 <tr><th>Permissions:</th>
 <td>
 <?php foreach($this->get('permission', array()) as $p): ?>
-<a class="btn btn-xs btn-default" href="#" onClick="acthelp('<?php print $p; ?>')"><?php print $this->localName($p);?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a>
+<a class="btn btn-xs btn-default" onClick="acthelp('<?php print $p; ?>')"><?php print $this->localName($p);?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a>
 <?php endforeach; ?>  
 </td></tr>
 <tr><th>Prohibitions:</th>
 <td>
 <?php foreach($this->get('prohibition', array()) as $p): ?>
-<a class="btn btn-xs btn-default" href="#" onClick="acthelp('<?php print $p; ?>')"><?php print $this->localName($p);?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a>
+<a class="btn btn-xs btn-default" onClick="acthelp('<?php print $p; ?>')"><?php print $this->localName($p);?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a>
 <?php endforeach; ?>  
 </td></tr>
 <tr><th>Duties:</th>
 <td>
 <?php foreach($this->get('duty', array()) as $p): ?>
-<a class="btn btn-xs btn-default" href="#" onClick="acthelp('<?php print $p; ?>')"><?php print $this->localName($p);?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a>
+<a class="btn btn-xs btn-default" onClick="acthelp('<?php print $p; ?>')"><?php print $this->localName($p);?>&nbsp;<i class="glyphicon glyphicon-info-sign"></i></a>
 <?php endforeach; ?>  
 </td></tr>
 </table>
