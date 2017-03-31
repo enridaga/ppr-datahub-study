@@ -205,15 +205,14 @@ $(document).ready(function(){
 <script>
 
 function sortTable(data){
-	console.log(data);
 	var table = $("#traceTable");
     var rows = table.find('tr:gt(2)').toArray().sort(sortTableComparer());
-   // for (var i = 0; i < rows.length; i++){table.append(rows[i])}
+    for (var i = 0; i < rows.length; i++){table.append(rows[i])}
 }
 function sortTableComparer() {
     return function(a, b) {
-        var valA = getLinkSource(a), valB = getLinkSource(b)
-        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
+        var valA = getLinkSource(a), valB = getLinkSource(b);
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB);
     }
 }
 function getLinkSource(tr){
