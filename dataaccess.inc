@@ -404,6 +404,7 @@ class DataAccess {
 		}
 		return $numberOfPolicies;
 	}
+	
 	public function conflicts($userId, $taskId) {
 		$choiceData = $this->choices ( $userId, $taskId );
 		$propagatedData = $this->propagated ( $taskId );
@@ -618,6 +619,190 @@ class DataAccess {
 		
 		return $info;
 	}
+	
+	public function resultsSummary($deonticFilter = NULL){
+		// By task, tool/group1, tool/group2, group1/group2
+		$results = array ();
+		// Cycle through tasks
+		foreach ( $this->tasksUsersStatus () as $tid => $tus ) {
+			foreach ( $tus ['users'] as $use ) {
+				// if($use['status'] == 6){
+				$j = array (
+					'task' => $tid,
+					'team' => $use ['name']
+				);
+				// Collect the conflicts
+				$uid = $this->userByName ( $j ['team'] );
+				$uid = $uid ['id'];
+				if ($uid == 1000)
+					continue;
+				
+				// For each task
+				if(!isset($results[$tid])){
+					$results[$tid] = array('taskId'=>$tid,'totalDecisions'=>$this->totalDecisions($tid,$deonticFilter));
+				}
+				if(!isset($results[$tid]['users'])){
+					$results[$tid]['users'] = array($use['name']);
+				}else{
+					array_push($results[$tid]['users'],$use['name']);
+					$user1 = $this->userByName($results[$tid]['users'][0]);
+					$user2 = $this->userByName($results[$tid]['users'][1]);
+					// Compute agreed with system
+					$results[$tid]['team1'] = $this->computeAgreed($tid, $user1['id'],$deonticFilter);
+					$results[$tid]['team2'] = $this->computeAgreed($tid, $user2['id'],$deonticFilter);
+					// Compute agreed with each other
+					$results[$tid]['agreed'] = $this->computeAgreementBetweenTeams($tid, $user1['id'], $user2['id'],$deonticFilter);
+					$results[$tid]['full-agreed'] = $this->computeFullAgreementBetweenTeams($tid, $user1['id'], $user2['id'],$deonticFilter);
+				}
+			}
+		}
+		
+		return $results;
+	}
+
+	public function computeAgreementBetweenTeams($taskId, $team1Id, $team2Id, $deonticFilter = NULL){
+		$choiceData1 = $this->choices ( $team1Id, $taskId );
+		$choiceData2 = $this->choices ( $team2Id, $taskId );
+		$agreed = 0;
+		foreach ( $choiceData1 as $output => $policy ) {
+			foreach ( $policy as $deontic => $actions ) {
+				if($deonticFilter !=NULL && $deonticFilter!=$deontic) continue;
+				foreach ( $actions as $action => $datasets ) {
+					if ($choiceData1 [$output] [$deontic] [$action] > 0 && $choiceData2 [$output] [$deontic] [$action] > 0) :
+					$agreed++;
+					elseif ($choiceData1 [$output] [$deontic] [$action] < 0 && $choiceData2 [$output] [$deontic] [$action] < 0 ) :
+					$agreed++;
+					elseif ($choiceData1 [$output] [$deontic] [$action] == 0 && $choiceData2 [$output] [$deontic] [$action] == 0) :
+					$agreed++;
+					else :
+					// Disagreeing
+					endif;
+				}
+			}
+		}
+		return $agreed;
+	}
+	public function computeFullAgreementBetweenTeams($taskId, $team1Id, $team2Id,$deonticFilter=NULL){
+		$choiceData1 = $this->choices ( $team1Id, $taskId );
+		$choiceData2 = $this->choices ( $team2Id, $taskId );
+		$agreed = 0;
+		foreach ( $choiceData1 as $output => $policy ) {
+			foreach ( $policy as $deontic => $actions ) {
+				if($deonticFilter!=NULL && $deonticFilter!= $deontic) continue;
+				foreach ( $actions as $action => $datasets ) {
+					if ($choiceData1 [$output] [$deontic] [$action] == $choiceData2 [$output] [$deontic] [$action]) :
+					$agreed++;
+					endif;
+				}
+			}
+		}
+		return $agreed;
+	}
+	
+	public function totalDecisions($taskId, $deonticFilter = NULL) {
+		$c=0;
+		foreach ( $this->policies ( $taskId ) as $output => $policy ) {
+			foreach ( $policy as $deontic => $actions ) {
+				if($deonticFilter != NULL && $deonticFilter != $deontic) continue;
+				foreach ( $actions as $action => $datasets ) {
+					$c++;
+				}
+			}
+		}
+		return $c;
+	}
+	
+	public function computeAgreed($taskId, $userId, $deonticFilter = NULL){
+// 		var_dump($userId);die;
+		$choiceData = $this->choices ( $userId, $taskId );
+		$propagatedData = $this->propagated ( $taskId );
+		$agreed = 0;
+		foreach ( $choiceData as $output => $policy ) {
+			foreach ( $policy as $deontic => $actions ) {
+				if($deonticFilter!=NULL && $deonticFilter!= $deontic) continue;
+				foreach ( $actions as $action => $datasets ) {
+					if ($choiceData [$output] [$deontic] [$action] > 0 && ! isset ( $propagatedData [$output] [$deontic] [$action] )) :
+					// still disagreeing toolismissing
+					elseif ($choiceData [$output] [$deontic] [$action] < 0 && isset ( $propagatedData [$output] [$deontic] [$action] )) :
+					// still disagreeing tooliswrong
+					elseif ($choiceData [$output] [$deontic] [$action] == 0) :
+					// still disagreeing dontknow
+					else :
+					// Agreeing
+					$agreed++;
+					endif;
+				}
+			}
+		}
+		return $agreed;
+	}
+	public function resolutionsSummary($tidFilter = NULL, $userFilter = NULL) {
+		$conflicts = array ();
+		// Cycle through tasks
+		foreach ( $this->tasksUsersStatus () as $tid => $tus ) {
+			if($tidFilter!=NULL && $tidFilter!=$tid) continue;
+			// Skip Administrator
+			foreach ( $tus ['users'] as $use ) {
+				// if($use['status'] == 6){
+				$j = array (
+						'task' => $tid,
+						'team' => $use ['name'] 
+				);
+				if($userFilter!=NULL && $userFilter!=$use['name']) continue;
+				// Collect the conflicts
+				$uid = $this->userByName ( $j ['team'] );
+				$uid = $uid ['id'];
+				if ($uid == 1000)
+					continue;
+				
+				$userId = $uid;
+				$taskId = $tid;
+				$choiceData = $this->choices ( $userId, $taskId );
+				$propagatedData = $this->propagated ( $taskId );
+				$resolutions = $this->resolutions ( $uid, $j ['task'] );
+				
+				$agreedAfter = array ();
+				foreach ( $choiceData as $output => $policy ) {
+					foreach ( $policy as $deontic => $actions ) {
+						foreach ( $actions as $action => $datasets ) {
+							$disagreed = isset ( $resolutions [$output] [$deontic] [$action] );
+							if ($choiceData [$output] [$deontic] [$action] > 0 && ! isset ( $propagatedData [$output] [$deontic] [$action] )) :
+														// still disagreeing toolismissing
+							elseif ($choiceData [$output] [$deontic] [$action] < 0 && isset ( $propagatedData [$output] [$deontic] [$action] )) :
+														// still disagreeing tooliswrong
+							elseif ($choiceData [$output] [$deontic] [$action] == 0) :
+														// still disagreeing dontknow
+							elseif ($disagreed) :
+								// AGREED AFTER!
+								$agreedAfter [$j ['team']] [$j ['task']] [$output] [$deontic . ' ' . $action] = $choiceData [$output] [$deontic] [$action];
+							 else :
+														// Not disagreeing
+							endif;
+						}
+					}
+				}
+				foreach ( $resolutions as $output => $m ) {
+					foreach ( $m as $deo => $mm ) {
+						foreach ( $mm as $act => $detail ) {
+							$conflict = $detail;
+							$conflict ['team'] = $j ['team'];
+							$conflict ['task'] = $j ['task'];
+							if (isset ( $agreedAfter [$j ['team']] [$j ['task']] [$output] [$deo . ' ' . $act] )) {
+								
+								$conflict ['agreedAfter'] = 'T';
+							} else {
+								$conflict ['agreedAfter'] = 'F';
+							}
+							// Check whether they changed their mind
+							array_push ( $conflicts, $conflict );
+						}
+					}
+				}
+			}
+		}
+		return $conflicts;
+	}
+	
 	public function relations() {
 		$dnns = 'http://purl.org/datanode/ns/';
 		
@@ -713,7 +898,10 @@ class DataAccess {
 	}
 	public function choices($userId, $taskId, $choices = NULL) {
 		if ($choices === NULL) {
-			return $this->_loadChoices ( $userId, $taskId );
+			if($ret = $this->_loadChoices ( $userId, $taskId )){
+				return $ret;
+			}
+			return array();
 		} else {
 			$this->_writeChoices ( $userId, $taskId, $choices );
 		}
@@ -966,6 +1154,7 @@ class TripleSet {
 			}
 		}
 	}
+	
 }
 class Sankey {
 	private $_triples;

@@ -1,0 +1,45 @@
+<h2><?php print $this->get('team','All teams'); ?>: <?php print $this->get('task','All tasks'); ?></h2>
+<table class="data">
+<thead>
+<tr>
+	<th>Task</th>
+	<th>Team</th>
+	<th>Output</th>
+	<th>Deontic</th>
+	<th>Action</th>
+	<th>Issue</th>
+	<th>Agreed after</th>
+	<th>Notes</th>
+	<th>Num wrong arcs</th>
+	<th>Wrong arcs</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach($this->get('resolutions', array()) as $conflict): ?>
+<tr>
+<td><?php print $conflict['task']; ?></td>
+<td><?php print $conflict['team']; ?></td>
+<td><?php print $this->localName($conflict['output']);?></td>
+<td><?php $p = explode(' ', $conflict['policy']); print $p[0];?></td><td><?php print $p[1];?></td>
+<td><?php print $conflict['issue']; ?></td>
+
+<?php $wrongs = array();?>
+<?php if(@$conflict['wrong']) foreach($conflict['wrong'] as $w0=>$w1):?>
+<?php foreach($w1 as $w2 => $w3):?>
+<?php foreach($w3 as $w4 => $w5):?>
+<?php array_push($wrongs, $w2);?>
+<?php endforeach;?>
+<?php endforeach;?>
+<?php endforeach;?>
+<?php $wrongs=array_unique($wrongs);?>
+
+<td><?php print @$conflict['agreedAfter']; ?></td>
+<td>
+<em><?php print @$conflict['whydontknow'] . @$conflict['incompleteinfo'];?></em>
+</td>
+<td><?php print count($wrongs);?></td>
+<td><?php print implode(' ', $wrongs);?></td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+</table>

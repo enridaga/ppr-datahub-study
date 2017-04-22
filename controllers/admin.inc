@@ -79,4 +79,32 @@ class AdminController extends DefaultController {
 		$v = new TaskViewer( $m );
 		$v->render ( 'layout' );
 	}
+	
+	public function resolutionsAction(){
+		
+		$tidFilter = $this->getParam('task',NULL);
+		$unameFilter = $this->getParam('team',NULL);
+		$m = $this->model();
+		$m['page'] = 'resolutions';
+		$m['data']['task'] = $tidFilter;
+		$m['data']['team'] = $unameFilter;
+		$m['data']['resolutions'] = DataAccess::instance()->resolutionsSummary($tidFilter,$unameFilter);
+		$v = new TaskViewer( $m );
+		$v->render ( 'layout' );
+	}
+	
+	public function resultsAction(){
+		$m = $this->model();
+		$m['page'] = 'results';
+		// Measuring agreement/disagreement
+		
+		// By task, tool/group1, tool/group2, group1/group2
+		
+		$m['data']['results'] = DataAccess::instance()->resultsSummary();
+		$m['data']['permissions'] = DataAccess::instance()->resultsSummary('permission');
+		$m['data']['prohibitions'] = DataAccess::instance()->resultsSummary('prohibition');
+		$m['data']['duties'] = DataAccess::instance()->resultsSummary('duty');
+		$v = new TaskViewer( $m );
+		$v->render ( 'layout' );
+	}
 }

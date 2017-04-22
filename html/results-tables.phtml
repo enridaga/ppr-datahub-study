@@ -1,0 +1,73 @@
+<h3>Totals</h3>
+<?php
+$D=0;
+$A=0;
+$C=0;
+?>
+<table class="data">
+<thead>
+<tr>
+<th>TASK</th>
+<th>TEAMS</th>
+<th>DECISIONS</th>
+<th>SYSTEM/TEAM 1</th>
+<th>SYSTEM/TEAM 2</th>
+<th>AGREEMENT</th>
+<th>CONSENSUS</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach($this->get('results') as $result): ?>
+<tr>
+<td><?php print $result['taskId']; ?></td>
+<td><?php print implode(' ',$result['users']); ?></td>
+<td><?php print $result['totalDecisions']; $D+=$result['totalDecisions'];?></td>
+<td><?php print $result['team1']; ?></td>
+<td><?php print $result['team2']; ?></td>
+<td><?php print $result['agreed']; $A+=$result['agreed'];?></td>
+<td><?php print $result['full-agreed']; $C+=$result['full-agreed']; ?></td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+<tbody>
+<tr>
+<th colspan=2>All</th><td colspan=3><?php print $D;?></td><td><?php print $A;?></td><td><?php print $C;?></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+<h3>Ratios</h3>
+<table class="data">
+<thead>
+<tr>
+<th>TASK</th>
+<th>TEAMS</th>
+<th>DECISIONS</th>
+<th>SYSTEM/TEAM 1</th>
+<th>SYSTEM/TEAM 2</th>
+<th>AGREEMENT</th>
+<th>CONSENSUS</th>
+</tr>
+</thead>
+<tbody>
+<?php foreach($this->get('results') as $result): ?>
+<tr>
+<td><?php print $result['taskId']; ?></td>
+<td><?php print implode(' ',$result['users']); ?></td>
+<td><?php print $t=$result['totalDecisions']; ?></td>
+<td><?php print round($result['team1']/$t,1); ?></td>
+<td><?php print round($result['team2']/$t,1); ?></td>
+<td><?php print round($result['agreed']/$t,1); ?></td>
+<td><?php print ($result['agreed'] == 0)?'N.A.':round($result['full-agreed']/ $result['agreed'],1); ?></td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+<tbody>
+<tr>
+<th colspan=2>All</th><td colspan=3><?php print $D;?></td><td><?php print round($A/$D,1);?></td><td><?php print round($C/$A,1);?></td>
+</tr>
+</tbody>
+</table>

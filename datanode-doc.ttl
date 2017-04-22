@@ -77,6 +77,8 @@ dn:hasSelection rdfs:comment "We represent here the outcome of the isolation of 
 dn:hasSnapshot rdfs:comment "A copy of a data node in a specific time point"@en .
 dn:hasStandIn dct:description "<p>Are we sure a stand-in is always a derivation?</p>" .
 dn:hasStandIn rdfs:comment "Some data is a substitute of another, for specific reasons."@en .
+dn:hasStatistic rdfs:comment "Computed metadata." .
+dn:hasStatistic skos:note "Maybe rename hasStatistics?" .
 dn:hasStatistic dct:description "<p>Statistics are at the same time computations and metadata of a source datanode.</p>" .
 dn:hasTypes rdfs:comment "Relates a data node to the vocabulary of the types used."@en .
 dn:hasUpdate dct:description "<p>Update is considered in a general meaning of having a role meant to better reflect the referred world.</p>" .
@@ -102,7 +104,7 @@ dn:links skos:note "It would be interesting to have a taste of other ways of doi
 dn:metadata dct:description "<p>This is used to relate a data node to its metadata.</p>" .
 dn:metadata rdfs:comment "A data node has another data node as metadata."@en .
 dn:nextVersionOf dct:description "<p>Relates a datanode to another that is the direct next version.</p>" .
-dn:optimizedInto rdfs:comment "A datanode have been optimized into a new one, to amplify existing capabilities."@en .
+dn:optimizedInto rdfs:comment "A datanode have been optimized into a new one, to amplify its functional capabilities."@en .
 dn:overlappingCapabilityWith dct:description "<p>Two data nodes have similar potential, their domains overlap.</p>" .
 dn:overlappingCapabilityWith skos:note "If the capability is the location, two version might not have the same location. We might want to specify a number of well known capabilities - format, location, meta-model, accessMethod, ... . Might this allow more inferences than the ones we can do now?"@en .
 dn:overlappingCapabilityWith skos:note "Similar relations might refer to other features, being it structural (they share schema elements), physical (they are both in XML) or related to the domain (they both talk about Music Artists) - just to make few examples.. We might want to specify other kind of features, covering: ownership (sameOwner), meta-model (sameMetaModel), syntax (sameSyntax), accessMethod (sameAccessMethod), license (compatibleLicense, sameLicense), policies (?)."@en .
