@@ -2,6 +2,6 @@
 .project
 .settings/
 composer.lock
-vendor/
+#vendor/
 properties.ini
 /.DS_Store
