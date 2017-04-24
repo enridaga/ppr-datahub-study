@@ -2,7 +2,10 @@
 <?php
 $D=0;
 $A=0;
+$T=0;
 $C=0;
+$S1=0;
+$S2=0;
 ?>
 <table class="data">
 <thead>
@@ -12,26 +15,38 @@ $C=0;
 <th>DECISIONS</th>
 <th>SYSTEM/TEAM 1</th>
 <th>SYSTEM/TEAM 2</th>
-<th>AGREEMENT</th>
-<th>CONSENSUS</th>
+<th>SYSTEM/TEAMS</th>
+<th>TEAM 1/TEAM 2</th>
+<th>TEAM 1/TEAM 2*</th>
+<th>TEAM 1+</th>
+<th>TEAM 2+</th>
 </tr>
 </thead>
 <tbody>
 <?php foreach($this->get('results') as $result): ?>
 <tr>
-<td><?php print $result['taskId']; ?></td>
-<td><?php print implode(' ',$result['users']); ?></td>
+<td><a href="<?php print route('admin','resolutions',array('task'=>$result['taskId']));?>"><?php print $result['taskId']; ?></a></td>
+<td><a href="<?php print route('admin','resolutions',array('task'=>$result['taskId'], 'team'=>$result['users'][0]));?>"><?php print $result['users'][0]; ?></a>
+<a href="<?php print route('admin','resolutions',array('task'=>$result['taskId'], 'team'=>$result['users'][1]));?>"><?php print $result['users'][1]; ?></a></td>
 <td><?php print $result['totalDecisions']; $D+=$result['totalDecisions'];?></td>
 <td><?php print $result['team1']; ?></td>
 <td><?php print $result['team2']; ?></td>
+<td><?php $tt=($result['team1']+$result['team2'])/2;print $tt; $T+=$tt;?></td>
 <td><?php print $result['agreed']; $A+=$result['agreed'];?></td>
 <td><?php print $result['full-agreed']; $C+=$result['full-agreed']; ?></td>
+<td><?php print $result['team1-strong'];$S1+=$result['team1-strong']; ?></td>
+<td><?php print $result['team2-strong'];$S2+=$result['team2-strong']; ?></td>
 </tr>
 <?php endforeach; ?>
 </tbody>
 <tbody>
 <tr>
-<th colspan=2>All</th><td colspan=3><?php print $D;?></td><td><?php print $A;?></td><td><?php print $C;?></td>
+<th colspan=2>All</th>
+<td colspan=3><?php print $D;?></td>
+<td><?php print $T;?></td>
+<td><?php print $A;?></td>
+<td><?php print $C;?></td>
+<td colspan=2><?php print ($S1+$S2)/2;?></td>
 </tr>
 </tbody>
 </table>
@@ -48,26 +63,37 @@ $C=0;
 <th>DECISIONS</th>
 <th>SYSTEM/TEAM 1</th>
 <th>SYSTEM/TEAM 2</th>
-<th>AGREEMENT</th>
-<th>CONSENSUS</th>
+<th>SYSTEM/TEAMS</th>
+<th>TEAM 1/TEAM 2</th>
+<th>TEAM 1/TEAM 2*</th>
+<th>TEAM 1+</th>
+<th>TEAM 2+</th>
 </tr>
 </thead>
 <tbody>
 <?php foreach($this->get('results') as $result): ?>
 <tr>
-<td><?php print $result['taskId']; ?></td>
-<td><?php print implode(' ',$result['users']); ?></td>
+<td><a href="<?php print route('admin','resolutions',array('task'=>$result['taskId']));?>"><?php print $result['taskId']; ?></a></td>
+<td><a href="<?php print route('admin','resolutions',array('task'=>$result['taskId'], 'team'=>$result['users'][0]));?>"><?php print $result['users'][0]; ?></a>
+<a href="<?php print route('admin','resolutions',array('task'=>$result['taskId'], 'team'=>$result['users'][1]));?>"><?php print $result['users'][1]; ?></a></td>
 <td><?php print $t=$result['totalDecisions']; ?></td>
 <td><?php print round($result['team1']/$t,1); ?></td>
 <td><?php print round($result['team2']/$t,1); ?></td>
+<td><?php print round(($result['team1']+$result['team2'])/($t*2),1); ?></td>
 <td><?php print round($result['agreed']/$t,1); ?></td>
 <td><?php print ($result['agreed'] == 0)?'N.A.':round($result['full-agreed']/ $result['agreed'],1); ?></td>
+<td><?php print round($result['team1-strong']/$t,1); ?></td>
+<td><?php print round($result['team2-strong']/$t,1); ?></td>
 </tr>
 <?php endforeach; ?>
 </tbody>
 <tbody>
 <tr>
-<th colspan=2>All</th><td colspan=3><?php print $D;?></td><td><?php print round($A/$D,1);?></td><td><?php print round($C/$A,1);?></td>
+<th colspan=2>All</th><td colspan=3><?php print $D;?></td>
+<td><?php print round($T/$D,1);?></td>
+<td><?php print round($A/$D,1);?></td>
+<td><?php print round($C/$A,1);?></td>
+<td colspan=2><?php print round(($S1+$S2)/($D*2),1);?></td>
 </tr>
 </tbody>
 </table>

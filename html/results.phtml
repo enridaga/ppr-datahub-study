@@ -1,5 +1,19 @@
-<?php $this->partial('results-tables',array('results'=>$this->get('results')));?>
+<table class="data">
+<tbody>
+<tr><th>DECISIONS</th><td>Number of decisions</td></tr>
+<tr><th>SYSTEM/TEAM 1</th><td>Agreement between TEAM 1 and SYSTEM</td></tr>
+<tr><th>SYSTEM/TEAM 2</th><td>Agreement between TEAM 2 and SYSTEM</td></tr>
+<tr><th>SYSTEM/TEAMS</th><td>Agreement with SYSTEM (average of both teams)</td></tr>
+<tr><th>TEAM 1/TEAM 2</th><td>Number of same decision taken by both teams</td></tr>
+<tr><th>TEAM 1/TEAM 2*</th><td>Number of same strong decision taken by both teams (only Certainly Yes/Absolutely No)</td></tr>
+<tr><th>TEAM 1+</th><td>Team 1 number of strong decisions (Certainly Yes/Absolutely No)</td></tr>
+<tr><th>TEAM 2+</th><td>Team 2, number of strong decisions (Certainly Yes/Absolutely No)</td></tr>
+</tbody>
+</table>
 
+
+<h2>All decisions</h2>
+<?php $this->partial('results-tables',array('results'=>$this->get('results')));?>
 <h2>Permissions</h2>
 <?php $this->partial('results-tables',array('results'=>$this->get('permissions')));?>
 <h3>Prohibitions</h3>
