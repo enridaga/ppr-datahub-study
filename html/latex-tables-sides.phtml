@@ -1,0 +1,65 @@
+<?php
+$D=0;
+$A=0;
+$T=0;
+$C=0;
+$S1=0;
+$S2=0;
+?>
+\begin{table}
+\caption{<?php print $this->get('caption');?>}
+\subfloat[<?php print $this->get('caption');?> (totals)]{\label{tab:<?php print $this->get('tabname');?>:tot}
+\begin{tabular}{|l|c||c|c|c|c|c|c|c|}\hline
+\textbf{$Journey$} & 
+\textbf{$D$} & 
+\textbf{$T_1$} & 
+\textbf{$T_2$} & 
+\textbf{$T_{avg}$} & 
+\textbf{$T_{12}$} & 
+\textbf{$T_{12+}$} & 
+\textbf{$T_{1+}$} & 
+\textbf{$T_{2+}$} \\ \hline
+<?php foreach($this->get('results') as $result): ?>
+<?php print $result['taskId']; ?> &
+<?php print $result['totalDecisions']; $D+=$result['totalDecisions'];?> &
+<?php print $result['team1']; ?> &
+<?php print $result['team2']; ?> &
+<?php $tt=($result['team1']+$result['team2'])/2;print $tt; $T+=$tt;?> &
+<?php print $result['agreed']; $A+=$result['agreed'];?> &
+<?php print $result['full-agreed']; $C+=$result['full-agreed']; ?> &
+<?php print $result['team1-strong'];$S1+=$result['team1-strong']; ?> &
+<?php print $result['team2-strong'];$S2+=$result['team2-strong']; ?> \\ \hline 
+<?php endforeach; ?>
+\hline
+All &
+<?php print $D;?> & \multicolumn{2}{l|}{} &
+<?php print $T;?> & <?php print $A;?> & <?php print $C;?> &
+\multicolumn{2}{c|}{<?php print ($S1+$S2)/2;?>}\\\hline
+\end{tabular}}
+\quad
+\subfloat[<?php print $this->get('caption');?> (ratios)]{\label{tab:<?php print $this->get('tabname');?>:ratios}
+\begin{tabular}{|c|c|c|c|c|c|c|}\hline
+\textbf{$T_1$} & 
+\textbf{$T_2$} & 
+\textbf{$T_{avg}$} & 
+\textbf{$T_{12}$} & 
+\textbf{$T_{12+}$} & 
+\textbf{$T_{1+}$} & 
+\textbf{$T_{2+}$} \\ \hline
+<?php foreach($this->get('results') as $result): ?>
+<?php $t=$result['totalDecisions']; ?>
+<?php print round($result['team1']/$t,1); ?> &
+<?php print round($result['team2']/$t,1); ?> &
+<?php print round(($result['team1']+$result['team2'])/($t*2),1); ?> &
+<?php print round($result['agreed']/$t,1); ?> &
+<?php print ($result['agreed'] == 0)?'N.A.':round($result['full-agreed']/ $result['agreed'],1); ?> &
+<?php print round($result['team1-strong']/$t,1); ?> &
+<?php print round($result['team2-strong']/$t,1); ?> \\ \hline
+<?php endforeach; ?>
+\hline
+\multicolumn{2}{|l|}{} &
+<?php print round($T/$D,1);?> & <?php print round($A/$D,1);?> & <?php print round($C/$A,1);?> &
+\multicolumn{2}{c|}{<?php print round(($S1+$S2)/($D*2),1);?>}\\\hline
+\end{tabular}}
+\end{table}
+

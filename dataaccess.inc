@@ -620,7 +620,7 @@ class DataAccess {
 		return $info;
 	}
 	
-	public function resultsSummary($deonticFilter = NULL){
+	public function resultsSummary($deonticFilter = NULL, $propagatedFilter = NULL){
 		// By task, tool/group1, tool/group2, group1/group2
 		$results = array ();
 		// Cycle through tasks
@@ -648,14 +648,14 @@ class DataAccess {
 					$user1 = $this->userByName($results[$tid]['users'][0]);
 					$user2 = $this->userByName($results[$tid]['users'][1]);
 					// Compute agreed with system
-					$results[$tid]['team1'] = $this->computeAgreed($tid, $user1['id'],$deonticFilter);
-					$results[$tid]['team2'] = $this->computeAgreed($tid, $user2['id'],$deonticFilter);
+					$results[$tid]['team1'] = $this->computeAgreed($tid, $user1['id'],$deonticFilter, $propagatedFilter);
+					$results[$tid]['team2'] = $this->computeAgreed($tid, $user2['id'],$deonticFilter, $propagatedFilter);
 					// Strong decisions
-					$results[$tid]['team1-strong'] = $this->computeStrongDecisions($tid, $user1['id'],$deonticFilter);
-					$results[$tid]['team2-strong'] = $this->computeStrongDecisions($tid, $user2['id'],$deonticFilter);
+					$results[$tid]['team1-strong'] = $this->computeStrongDecisions($tid, $user1['id'],$deonticFilter, $propagatedFilter);
+					$results[$tid]['team2-strong'] = $this->computeStrongDecisions($tid, $user2['id'],$deonticFilter, $propagatedFilter);
 					// Compute agreed with each other
-					$results[$tid]['agreed'] = $this->computeAgreementBetweenTeams($tid, $user1['id'], $user2['id'],$deonticFilter);
-					$results[$tid]['full-agreed'] = $this->computeFullAgreementBetweenTeams($tid, $user1['id'], $user2['id'],$deonticFilter);
+					$results[$tid]['agreed'] = $this->computeAgreementBetweenTeams($tid, $user1['id'], $user2['id'],$deonticFilter, $propagatedFilter);
+					$results[$tid]['full-agreed'] = $this->computeFullAgreementBetweenTeams($tid, $user1['id'], $user2['id'],$deonticFilter, $propagatedFilter);
 				}
 			}
 		}
@@ -663,7 +663,7 @@ class DataAccess {
 		return $results;
 	}
 
-	public function computeAgreementBetweenTeams($taskId, $team1Id, $team2Id, $deonticFilter = NULL){
+	public function computeAgreementBetweenTeams($taskId, $team1Id, $team2Id, $deonticFilter = NULL, $propagatedFilter = NULL){
 		$choiceData1 = $this->choices ( $team1Id, $taskId );
 		$choiceData2 = $this->choices ( $team2Id, $taskId );
 		$agreed = 0;
@@ -671,11 +671,11 @@ class DataAccess {
 			foreach ( $policy as $deontic => $actions ) {
 				if($deonticFilter !=NULL && $deonticFilter!=$deontic) continue;
 				foreach ( $actions as $action => $datasets ) {
-					if ($choiceData1 [$output] [$deontic] [$action] > 0 && $choiceData2 [$output] [$deontic] [$action] > 0) :
+					if ($choiceData1 [$output] [$deontic] [$action] > 0 && $choiceData2 [$output] [$deontic] [$action] > 0 && $propagatedFilter !== FALSE) :
 					$agreed++;
-					elseif ($choiceData1 [$output] [$deontic] [$action] < 0 && $choiceData2 [$output] [$deontic] [$action] < 0 ) :
+					elseif ($choiceData1 [$output] [$deontic] [$action] < 0 && $choiceData2 [$output] [$deontic] [$action] < 0  && $propagatedFilter !== TRUE) :
 					$agreed++;
-					elseif ($choiceData1 [$output] [$deontic] [$action] == 0 && $choiceData2 [$output] [$deontic] [$action] == 0) :
+					elseif ($choiceData1 [$output] [$deontic] [$action] == 0 && $choiceData2 [$output] [$deontic] [$action] == 0  && $propagatedFilter === NULL) :
 					$agreed++;
 					else :
 					// Disagreeing
@@ -715,7 +715,29 @@ class DataAccess {
 		return $c;
 	}
 
-	public function computeAgreed($taskId, $userId, $deonticFilter = NULL){
+	public function propagationTable($taskId, $deonticFilter = NULL, $propagatedFilter = NULL){
+		// 		var_dump($userId);die;
+		$choiceData = DataAccess::instance()->policies($taskId);
+		$propagatedData = $this->propagated ( $taskId );
+		//$choiceData = $this->choices ( $userId, $taskId );
+		$table;
+		foreach ( $choiceData as $output => $policy ) {
+			foreach ( $policy as $deontic => $actions ) {
+				if($deonticFilter!=NULL && $deonticFilter!= $deontic) continue;
+				foreach ( $actions as $action => $datasets ) {
+					$table[]=array(
+						implode(",\n",$datasets),
+						$deontic,
+						$action,
+						$output,
+						isset ( $propagatedData [$output] [$deontic] [$action] )?'T':'F'
+					);
+				}
+			}
+		}
+		return $table;
+	}
+	public function computeAgreed($taskId, $userId, $deonticFilter = NULL, $propagatedFilter = NULL){
 		// 		var_dump($userId);die;
 		$choiceData = $this->choices ( $userId, $taskId );
 		$propagatedData = $this->propagated ( $taskId );
@@ -730,8 +752,14 @@ class DataAccess {
 					// still disagreeing tooliswrong
 					elseif ($choiceData [$output] [$deontic] [$action] == 0) :
 					// still disagreeing dontknow
-					else :
-					// Agreeing
+					elseif($propagatedFilter === TRUE && isset ( $propagatedData [$output] [$deontic] [$action]) && $choiceData [$output] [$deontic] [$action] > 0):
+					// agreeing on propagating
+					$agreed++;
+					elseif($propagatedFilter === FALSE && (! isset ( $propagatedData [$output] [$deontic] [$action] )) && $choiceData [$output] [$deontic] [$action] < 0):
+					// agreeing on not propagating
+					$agreed++;
+					elseif($propagatedFilter === NULL) :
+					// Agreeing with the system (any decision)
 					$agreed++;
 					endif;
 				}
@@ -739,7 +767,7 @@ class DataAccess {
 		}
 		return $agreed;
 	}
-	public function computeStrongDecisions($taskId, $userId, $deonticFilter = NULL){
+	public function computeStrongDecisions($taskId, $userId, $deonticFilter = NULL, $propagatedFilter = NULL){
 // 		var_dump($userId);die;
 		$choiceData = $this->choices ( $userId, $taskId );
 		$agreed = 0;
@@ -747,9 +775,17 @@ class DataAccess {
 			foreach ( $policy as $deontic => $actions ) {
 				if($deonticFilter!=NULL && $deonticFilter!= $deontic) continue;
 				foreach ( $actions as $action => $datasets ) {
-					if ($choiceData [$output] [$deontic] [$action] == -2 || $choiceData [$output] [$deontic] [$action] == 2) :
-					$agreed++;
-					endif;
+					if($propagatedFilter === NULL){
+						if ($choiceData [$output] [$deontic] [$action] == -2 || $choiceData [$output] [$deontic] [$action] == 2) :
+						$agreed++;
+						endif;
+					}else{
+						if ($propagatedFilter  == FALSE && $choiceData [$output] [$deontic] [$action] == -2 ) :
+						$agreed++;
+						elseif($propagatedFilter === TRUE && $choiceData [$output] [$deontic] [$action] == 2):
+						$agreed++;
+						endif;
+					}
 				}
 			}
 		}
@@ -915,8 +951,34 @@ class DataAccess {
 		$f = __DIR__ . '/state/' . $taskId . '__' . $userId . '--resolutions.json';
 		return file_put_contents ( $f, json_encode ( $resolutions ) );
 	}
+
+	public function allChoices() {
+		$results = array();
+		foreach ( $this->tasksUsersStatus () as $tid => $tus ) {
+			foreach ( $tus ['users'] as $use ) {
+				// if($use['status'] == 6){
+				$j = array (
+					'task' => $tid,
+					'team' => $use ['name']
+				);
+				// Collect the conflicts
+				$uid = $this->userByName ( $j ['team'] );
+				$uid = $uid ['id'];
+				if ($uid == 1000)
+					continue;
+				if($tid == 'TUTORIAL') continue;
+				
+				if(!isset($results[$tid])){
+					$results[$tid] = array();
+				}
+				$results[$tid][$j['team']] = $this->choices($uid, $tid);
+			}
+		}
+		return $results;
+	}
+	
 	public function choices($userId, $taskId, $choices = NULL) {
-		if ($choices === NULL) {
+			if ($choices === NULL) {
 			if($ret = $this->_loadChoices ( $userId, $taskId )){
 				return $ret;
 			}

@@ -1,4 +1,3 @@
-<h3>Totals</h3>
 <?php
 $D=0;
 $A=0;
@@ -7,6 +6,7 @@ $C=0;
 $S1=0;
 $S2=0;
 ?>
+<h3>Totals</h3>
 <table class="data">
 <thead>
 <tr>
@@ -92,7 +92,7 @@ $S2=0;
 <th colspan=2>All</th><td colspan=3><?php print $D;?></td>
 <td><?php print round($T/$D,1);?></td>
 <td><?php print round($A/$D,1);?></td>
-<td><?php print round($C/$A,1);?></td>
+<td><?php print ($A!=0)?round($C/$A,1):'N.A.';?></td>
 <td colspan=2><?php print round(($S1+$S2)/($D*2),1);?></td>
 </tr>
 </tbody>

@@ -99,12 +99,79 @@ class AdminController extends DefaultController {
 		// Measuring agreement/disagreement
 		
 		// By task, tool/group1, tool/group2, group1/group2
-		
+		if($this->has('latex')){
+			header('Content-Type: text/plain; charset=utf-8',true);
+			$m['page'] = 'latex-results';
+		}
+		$m['data']['subview'] = 'latex-tables-sides';
 		$m['data']['results'] = DataAccess::instance()->resultsSummary();
 		$m['data']['permissions'] = DataAccess::instance()->resultsSummary('permission');
 		$m['data']['prohibitions'] = DataAccess::instance()->resultsSummary('prohibition');
 		$m['data']['duties'] = DataAccess::instance()->resultsSummary('duty');
 		$v = new TaskViewer( $m );
-		$v->render ( 'layout' );
+		if($this->has('latex')){
+			$v->render ( 'nowrap' );
+		}else{
+			$v->render ( 'layout' );
+		}
+	}
+	public function resultspropagatedAction(){
+		$m = $this->model();
+		$m['page'] = 'results';
+		// Measuring agreement/disagreement
+		
+		// By task, tool/group1, tool/group2, group1/group2
+		if($this->has('latex')){
+			header('Content-Type: text/plain; charset=utf-8',true);
+			$m['page'] = 'latex-results';
+		}
+		$m['data']['results'] = DataAccess::instance()->resultsSummary(NULL,TRUE);
+		$m['data']['permissions'] = DataAccess::instance()->resultsSummary('permission', TRUE);
+		$m['data']['prohibitions'] = DataAccess::instance()->resultsSummary('prohibition', TRUE);
+		$m['data']['duties'] = DataAccess::instance()->resultsSummary('duty', TRUE);
+		$v = new TaskViewer( $m );
+		if($this->has('latex')){
+			$v->render ( 'nowrap' );
+		}else{
+			$v->render ( 'layout' );
+		}
+	}
+	
+	public function resultsblockedAction(){
+		$m = $this->model();
+		$m['page'] = 'results';
+		// Measuring agreement/disagreement
+		
+		// By task, tool/group1, tool/group2, group1/group2
+		if($this->has('latex')){
+			header('Content-Type: text/plain; charset=utf-8',true);
+			$m['page'] = 'latex-results';
+		}
+		$m['data']['results'] = DataAccess::instance()->resultsSummary(NULL, FALSE);
+		$m['data']['permissions'] = DataAccess::instance()->resultsSummary('permission', FALSE);
+		$m['data']['prohibitions'] = DataAccess::instance()->resultsSummary('prohibition', FALSE);
+		$m['data']['duties'] = DataAccess::instance()->resultsSummary('duty', FALSE);
+		$v = new TaskViewer( $m );
+		if($this->has('latex')){
+			$v->render ( 'nowrap' );
+		}else{
+			$v->render ( 'layout' );
+		}
+	}
+	
+	public function decisionsAction(){
+		header('Content-Type: text/plain; charset=utf-8',true);
+		$tasks = DataAccess::instance()->tasks();
+		$table = array();
+		$choices = DataAccess::instance()->allChoices();
+		foreach($tasks as $task) {
+			if($task->id == 'TUTORIAL') continue;
+			$table[$task->id] = DataAccess::instance()->propagationTable( $task->id );
+		}
+		$m = $this->model();
+		$m['table'] = $table;
+		$m['choices'] = $choices;
+		$v = new TaskViewer( $m );
+		$v->render ( 'latex-propagation-table' );
 	}
 }

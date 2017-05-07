@@ -1,0 +1,6 @@
+% !TEX root=../main.tex
+<?php $subview = $this->get('subview') ; ?>
+<?php $this->partial($subview, array('results'=>$this->get('results'),'caption'=>'All decisions','tabname'=>'policies')); ?>
+<?php $this->partial($subview, array('results'=>$this->get('permissions'),'caption'=>'Permissions','tabname'=>'permissions')); ?>
+<?php $this->partial($subview, array('results'=>$this->get('prohibitions'),'caption'=>'Prohibitions','tabname'=>'prohibitions')); ?>
+<?php $this->partial($subview, array('results'=>$this->get('duties'),'caption'=>'Duties','tabname'=>'duties')); ?>

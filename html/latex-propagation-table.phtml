@@ -1,0 +1,28 @@
+<?php $choices = $this->get('choices');?>
+<?php function prefix($s){
+	
+	foreach(array(
+			'http://purl.org/NET/ldr/ns#'=>'ldr',
+			'http://www.w3.org/ns/odrl/2/' => 'odrl',
+			'http://creativecommons.org/ns#' => 'cc'
+	) as $ns => $pf){
+		if(strpos($s, $ns) === 0){
+			return $pf;
+		}
+	}
+};
+function clean($s){
+	return str_replace('#','\#',$s);
+}
+?>
+<?php foreach($this->get('table') as $id => $task):?>
+<?php print '%' . $id ."\n"; ?>
+<?php foreach($task as $row):?>
+<?php $teams = array(); $tix = 0; ?>
+<?php foreach(array_keys($choices[$id]) as $teamId):?>
+<?php $teams[$tix] = ($choices[$id][$teamId][$row[3]][$row[1]][$row[2]] > 0) ? 'T' : 'F'; $tix++; ?>
+<?php endforeach; ?>
+<?php print (($row[4]== 'T'? '\rowcolor{positive!10} ' : '\rowcolor{negative!10}')) . $id; ?> & <?php print '{\tiny ' . clean($row[0]) . '}'; ?> & <?php switch ($row[1]):  case 'permission': print '\Circle'; break; case 'prohibition': print '\CIRCLE'; break; case 'duty': print '\RIGHTcircle'; endswitch;?> & <?php print prefix($row[2]) .':'. $this->localName($row[2]); ?> & <?php print $this->localName($row[3]); ?> & <?php print $row[4]; ?> & <?php print $teams[0]; ?> & <?php print $teams[1]; ?> & <?php print ($row[4] == $teams[0] && $teams[0] == $teams[1])?'':'!';?> \\ \hline <?php print "\n"?>
+<?php endforeach;?>
+<?php print "\hline\n"?><?php print "\n"?>
+<?php endforeach;?>

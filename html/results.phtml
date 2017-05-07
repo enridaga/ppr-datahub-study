@@ -10,13 +10,12 @@
 <tr><th>TEAM 2+</th><td>Team 2, number of strong decisions (Certainly Yes/Absolutely No)</td></tr>
 </tbody>
 </table>
-
-
+<?php $subview = ($this->has('latex') ? 'latex-tables' : 'results-tables'); ?>
 <h2>All decisions</h2>
-<?php $this->partial('results-tables',array('results'=>$this->get('results')));?>
+<?php $this->partial($subview, array('results'=>$this->get('results'))); ?>
 <h2>Permissions</h2>
-<?php $this->partial('results-tables',array('results'=>$this->get('permissions')));?>
+<?php $this->partial($subview, array('results'=>$this->get('permissions'))); ?>
 <h3>Prohibitions</h3>
-<?php $this->partial('results-tables',array('results'=>$this->get('prohibitions')));?>
+<?php $this->partial($subview, array('results'=>$this->get('prohibitions'))); ?>
 <h3>Duties</h3>
-<?php $this->partial('results-tables',array('results'=>$this->get('duties')));?>
+<?php $this->partial($subview, array('results'=>$this->get('duties'))); ?>
